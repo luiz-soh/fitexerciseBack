@@ -13,25 +13,30 @@ namespace FitExerciseBack.Setup.SecretsManager
     {
         private readonly string _region;
         private readonly string _secretName;
+        private readonly AWSCredentials _credentials;
 
 
-        public AmazonSecretsManagerConfigurationProvider(string region, string secretName)
+        public AmazonSecretsManagerConfigurationProvider(string region, string secretName, AWSCredentials credentials)
         {
             _region = region;
             _secretName = secretName;
+            _credentials = credentials;
         }
 
         public override void Load()
         {
             var secret = GetSecret();
 
-            Data = JsonSerializer.Deserialize<Dictionary<string, string>>(secret);
+            if (!string.IsNullOrEmpty(secret))
+            {
+                Data = JsonSerializer.Deserialize<Dictionary<string, string>>(secret)!;
+            }
         }
 
         private string GetSecret()
         {
             using var client =
-            new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(_region));
+            new AmazonSecretsManagerClient(_credentials, RegionEndpoint.GetBySystemName(_region));
 
             var request = new GetSecretValueRequest
             {

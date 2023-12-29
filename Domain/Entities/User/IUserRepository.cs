@@ -9,7 +9,7 @@ namespace Domain.Entities.User
         Task SignUp(SignUpDto input);
         Task UpdateRefreshToken(int userId, string refreshToken);
         Task<UserDto> GetRefreshToken(string refreshToken, int userId);
-        Task<bool> UserAlreadyExists(string username);
+        Task<bool> UserAlreadyExists(string username, string email);
         Task<bool> DeleteUser(int userId);
         Task AddUserEmail(string email, int userId);
         Task<UserDto> GetUserData(int userId);

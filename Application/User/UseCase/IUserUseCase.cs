@@ -16,6 +16,6 @@ namespace Application.User.UseCase
         Task<bool> DeleteUser(int userId);
         Task<List<UserDto>> GetUsersByGymId(int gymId);
 
-        Task<bool> UsernameExists(string username);
+        Task<bool> UserExists(string username, string email);
     }
 }

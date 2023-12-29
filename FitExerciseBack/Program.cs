@@ -1,3 +1,5 @@
+using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using Domain.Configuration;
 using FitExerciseBack.Setup;
 using System.Reflection;
@@ -8,7 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Configuration.AddAmazonSecretsManager("us-east-1", "fitexercise");
+var awsOptions = builder.Configuration.GetAWSOptions();
+builder.Services.AddDefaultAWSOptions(awsOptions);
+
+var storeChain = new CredentialProfileStoreChain();
+
+if (storeChain.TryGetAWSCredentials(awsOptions.Profile, out var awsCredentials))
+{
+    builder.Configuration.AddAmazonSecretsManager("us-east-1", "fitexercise", awsCredentials);
+}
+
 builder.Services.Configure<Secrets>(builder.Configuration);
 
 builder.Services.AddAuthenticationJWT(builder);

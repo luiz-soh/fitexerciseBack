@@ -65,10 +65,10 @@ namespace Infra.Repository.User
                 return new UserDto();
         }
 
-        public async Task<bool> UserAlreadyExists(string username)
+        public async Task<bool> UserAlreadyExists(string username, string email)
         {
             using var context = new ContextBase(_optionsBuilder, _secrets);
-            return await context.FitUser.Where(u => u.Username == username).AnyAsync();
+            return await context.FitUser.Where(u => u.Username == username || u.UserEmail == email).AnyAsync();
         }
 
         public async Task<bool> DeleteUser(int userId)

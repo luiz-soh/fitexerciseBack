@@ -52,21 +52,16 @@ namespace Application.User.UseCase
             }
             return new TokenDto();
         }
-        public async Task<bool> UsernameExists(string username)
+
+        public async Task<bool> UserExists(string username, string email)
         {
-            return await _userRepository.UserAlreadyExists(username);
+            return await _userRepository.UserAlreadyExists(username, email);
         }
 
         public async Task SignUp(SignUpInput input)
         {
 
             var encryptedPassword = _tokenUseCase.EncryptPassword(input.Password);
-
-            //if (await _userRepository.UserAlreadyExists(input.Username))
-            //{
-            //    return new ErrorOutput("Username ou e-mail ja cadastrado");
-            //}
-
             var signUp = new SignUpDto(input.Username, encryptedPassword, input.UserEmail, input.GymId, input.UserProfile);
             await _userRepository.SignUp(signUp);
 

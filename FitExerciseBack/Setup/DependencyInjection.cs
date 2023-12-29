@@ -3,6 +3,7 @@ using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.GetUserData;
 using Application.User.Commands.GetUsersByGym;
 using Application.User.Commands.SignIn;
+using Application.User.Commands.SignUp;
 using Application.User.Handlers;
 using Application.User.UseCase;
 using Domain.Base.Communication;
@@ -44,6 +45,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<GetUserDataCommand, UserDto>, GetUserDataHandler>();
             services.AddTransient<IRequestHandler<GetUsersByGymCommand, List<UserDto>>, GetUsersByGymHandler>();
             services.AddTransient<IRequestHandler<SignInCommand, TokenDto>, SignInHandler>();
+            services.AddTransient<IRequestHandler<SignUpCommand, bool>, SignUpHandler>();
         }
     }
 }
