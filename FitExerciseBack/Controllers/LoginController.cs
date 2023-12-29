@@ -1,4 +1,5 @@
 ﻿using Application.User.Boundaries.Input;
+using Application.User.Commands.DeleteUser;
 using Application.User.Commands.SignIn;
 using Application.User.Commands.SignUp;
 using Domain.Base.Communication;
@@ -46,11 +47,30 @@ namespace FitExerciseBack.Controllers
         {
             var command = new SignUpCommand(input);
 
-            var token = await _mediatorHandler.SendCommand<SignUpCommand, bool>(command);
+            await _mediatorHandler.SendCommand<SignUpCommand, bool>(command);
 
             if (IsValidOperation())
             {
                 return Created();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpDelete("DeleteUser/{userId}")]
+        [SwaggerResponse(200, Description = "Sucesso")]
+        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
+        public async Task<IActionResult> DeleteUser([FromRoute] int userId )
+        {
+            var command = new DeleteUserCommand(userId);
+
+            await _mediatorHandler.SendCommand<DeleteUserCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok();
             }
             else
             {
