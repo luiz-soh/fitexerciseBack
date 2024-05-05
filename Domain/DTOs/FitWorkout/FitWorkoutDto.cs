@@ -1,4 +1,5 @@
 
+using Domain.DTOs.S3;
 using Domain.Entities.FitWorkout;
 
 namespace Domain.DTOs.FitWorkout
@@ -6,13 +7,13 @@ namespace Domain.DTOs.FitWorkout
     public class FitWorkoutDto
     {
         #region constructors
-        public FitWorkoutDto(string s3Path, string imgPath, string workoutName, string fileName, int? gymId)
+        public FitWorkoutDto(UploadDto upload, int? gymId)
         {
-            S3Path = s3Path;
-            WorkoutName = workoutName;
+            S3Path = upload.VideoPath;
+            WorkoutName = upload.WorkoutName;
             WorkoutId = 0;
-            FileName = fileName;
-            ImgPath = imgPath;
+            FileName = upload.FileName;
+            ImgPath = upload.ImgPath;
             GymId = gymId;
         }
 

@@ -1,5 +1,6 @@
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
+using Amazon.S3;
 using Domain.Configuration;
 using FitExerciseBack.Setup;
 using System.Reflection;
@@ -23,7 +24,7 @@ if (storeChain.TryGetAWSCredentials(awsOptions.Profile, out var awsCredentials))
 builder.Services.Configure<Secrets>(builder.Configuration);
 
 builder.Services.AddAuthenticationJWT(builder);
-
+builder.Services.AddAWSService<IAmazonS3>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenConfig();

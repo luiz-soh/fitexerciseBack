@@ -6,7 +6,7 @@ using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using MediatR;
 
-namespace Application.User.Handlers
+namespace Application.FitWorkout.Handlers
 {
     public class GetExercisesHandler : IRequestHandler<GetExecisesCommand, List<ExerciseOutput>>
     {

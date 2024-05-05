@@ -1,11 +1,16 @@
 ﻿using Application.FitWorkout.Boundaries;
+using Application.FitWorkout.Commands.CreateExercise;
+using Application.FitWorkout.Commands.EditExerciseData;
+using Application.FitWorkout.Commands.EditExerciseMedia;
 using Application.FitWorkout.Commands.GetExerciseById;
 using Application.FitWorkout.Commands.GetExercises;
+using Application.FitWorkout.Handlers;
 using Application.FitWorkout.UseCase;
 using Application.Gym.Commands.CreateGym;
 using Application.Gym.Commands.LogIn;
 using Application.Gym.Handlers;
 using Application.Gym.UseCase;
+using Application.S3.UseCase;
 using Application.Token.UseCase;
 using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.DeleteUser;
@@ -69,6 +74,12 @@ namespace FitExerciseBack.Setup
             services.AddScoped<IFitWorkoutUseCase, FitWorkoutUseCase>();
             services.AddTransient<IRequestHandler<GetExecisesCommand, List<ExerciseOutput>>, GetExercisesHandler>();
             services.AddTransient<IRequestHandler<GetExerciseByIdCommand, FullExerciseOutput>, GetExerciseByIdHandler>();
+            services.AddTransient<IRequestHandler<CreateExerciseCommand, bool>, CreateExerciseHandler>();
+            services.AddTransient<IRequestHandler<EditExerciseDataCommand, bool>, EditExerciseDataHandler>();
+            services.AddTransient<IRequestHandler<EditExerciseMediaCommand, bool>, EditExerciseMediaHandler>();
+
+            //S3
+            services.AddScoped<IS3UseCase, S3UseCase>();
         }
     }
 }

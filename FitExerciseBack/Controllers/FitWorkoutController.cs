@@ -1,7 +1,10 @@
 using Application.FitWorkout.Boundaries;
+using Application.FitWorkout.Commands.CreateExercise;
+using Application.FitWorkout.Commands.EditExerciseData;
+using Application.FitWorkout.Commands.EditExerciseMedia;
 using Application.FitWorkout.Commands.GetExerciseById;
 using Application.FitWorkout.Commands.GetExercises;
-using Application.FitWorkout.UseCase;
+using Application.S3.Boundaries;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using MediatR;
@@ -26,7 +29,7 @@ namespace FitExerciseBack.Controllers
 
         [HttpGet("GetExercises")]
         [ProducesResponseType(typeof(List<ExerciseOutput>), 200)]
-        public async Task<IActionResult> GetExercises([FromHeader]int userId)
+        public async Task<IActionResult> GetExercises([FromHeader] int userId)
         {
             var command = new GetExecisesCommand(userId);
 
@@ -42,56 +45,60 @@ namespace FitExerciseBack.Controllers
             }
         }
 
-        // [HttpPost("UploadExercise")]
-        // [DisableRequestSizeLimit]
-        // [Authorize(Roles = "gym")]
-        // public async Task<IActionResult> UploadExercise([FromForm] UploadInput uploadInput)
-        // {
-        //     var upload = await _s3Service.UploadFile(uploadInput);
+        [HttpPost("UploadExercise")]
+        [DisableRequestSizeLimit]
+        [Authorize(Roles = "gym")]
+        public async Task<IActionResult> UploadExercise([FromForm] UploadInput uploadInput)
+        {
+            var command = new CreateExerciseCommand(uploadInput);
 
-        //     if (upload)
-        //     {
-        //         return Ok();
-        //     }
-        //     else
-        //     {
-        //         return StatusCode(500);
-        //     }
-        // }
+            await _mediatorHandler.SendCommand<CreateExerciseCommand, bool>(command);
 
-        // [Authorize(Roles = "gym")]
-        // [HttpPut("EditExerciseData")]
-        // public async Task<IActionResult> EditExerciseData([FromBody] EditExerciseInput exerciseInput)
-        // {
-        //     var response = await _s3Service.EditExerciseData(exerciseInput);
+            if (IsValidOperation())
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
 
-        //     if (response)
-        //     {
-        //         return Ok();
-        //     }
-        //     else
-        //     {
-        //         return StatusCode(500);
-        //     }
+        [Authorize(Roles = "gym")]
+        [HttpPut("EditExerciseData")]
+        public async Task<IActionResult> EditExerciseData([FromBody] EditExerciseDataInput exerciseInput)
+        {
+            var command = new EditExerciseDataCommand(exerciseInput);
 
-        // }
+            await _mediatorHandler.SendCommand<EditExerciseDataCommand, bool>(command);
 
-        // [Authorize(Roles = "gym")]
-        // [HttpPut("EditExerciseMedia")]
-        // public async Task<IActionResult> EditExerciseMedia([FromForm] EditExerciseMediaInput input)
-        // {
-        //     var response = await _s3Service.EditExerciseMedia(input);
+            if (IsValidOperation())
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
 
-        //     if (response)
-        //     {
-        //         return Ok();
-        //     }
-        //     else
-        //     {
-        //         return StatusCode(500);
-        //     }
+        [Authorize(Roles = "gym")]
+        [HttpPut("EditExerciseMedia")]
+        public async Task<IActionResult> EditExerciseMedia([FromForm] EditExerciseMediaInput input)
+        {
+            var command = new EditExerciseMediaCommand(input);
 
-        // }
+            await _mediatorHandler.SendCommand<EditExerciseMediaCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
 
         [HttpGet("GetExerciseById/{id}")]
         [ProducesResponseType(typeof(FullExerciseOutput), 200)]
