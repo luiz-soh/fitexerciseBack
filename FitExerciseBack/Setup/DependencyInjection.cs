@@ -6,6 +6,14 @@ using Application.FitWorkout.Commands.GetExerciseById;
 using Application.FitWorkout.Commands.GetExercises;
 using Application.FitWorkout.Handlers;
 using Application.FitWorkout.UseCase;
+using Application.GroupWorkout.Boundaries;
+using Application.GroupWorkout.Commands;
+using Application.GroupWorkout.Commands.CreateGroup;
+using Application.GroupWorkout.Commands.DeleteGroupById;
+using Application.GroupWorkout.Commands.GetGroupById;
+using Application.GroupWorkout.Commands.UpdateGroup;
+using Application.GroupWorkout.Handlers;
+using Application.GroupWorkout.UseCase;
 using Application.Gym.Commands.CreateGym;
 using Application.Gym.Commands.LogIn;
 using Application.Gym.Handlers;
@@ -26,10 +34,12 @@ using Domain.DTOs.Gym;
 using Domain.DTOs.Token;
 using Domain.DTOs.User;
 using Domain.Entities.FitWorkout;
+using Domain.Entities.GroupWorkout;
 using Domain.Entities.Gym;
 using Domain.Entities.Plan;
 using Domain.Entities.User;
 using Infra.Repository.FitWorkout;
+using Infra.Repository.GroupWorkout;
 using Infra.Repository.Gym;
 using Infra.Repository.Plan;
 using Infra.Repository.User;
@@ -52,6 +62,7 @@ namespace FitExerciseBack.Setup
             services.AddScoped<IGymRepository, GymRepository>();
             services.AddScoped<IPlanRepository, PlanRepository>();
             services.AddScoped<IFitWorkoutRepository, FitWorkoutRepository>();
+            services.AddScoped<IGroupWorkoutRepository, GroupWorkoutRepository>();
 
             //Token
             services.AddScoped<ITokenUseCase, TokenUseCase>();
@@ -77,6 +88,14 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<CreateExerciseCommand, bool>, CreateExerciseHandler>();
             services.AddTransient<IRequestHandler<EditExerciseDataCommand, bool>, EditExerciseDataHandler>();
             services.AddTransient<IRequestHandler<EditExerciseMediaCommand, bool>, EditExerciseMediaHandler>();
+
+            //GroupWorkout
+            services.AddScoped<IGroupWorkoutUseCase, GroupWorkoutUseCase>();
+            services.AddTransient<IRequestHandler<GetGroupsCommand, List<GroupWorkoutOutput>>, GetGroupsHandler>();
+            services.AddTransient<IRequestHandler<CreateGroupCommand, bool>, CreateGroupHandler>();
+            services.AddTransient<IRequestHandler<UpdateGroupCommand, bool>, UpdateGroupHandler>();
+            services.AddTransient<IRequestHandler<GetGroupByIdCommand, GroupWorkoutOutput>, GetGroupByIdHandler>();
+            services.AddTransient<IRequestHandler<DeleteGroupByIdCommand, bool>, DeleteGroupByIdHandler>();
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();

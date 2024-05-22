@@ -1,4 +1,3 @@
-using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 using Domain.Configuration;

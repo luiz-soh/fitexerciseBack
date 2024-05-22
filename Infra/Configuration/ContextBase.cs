@@ -1,5 +1,6 @@
 ﻿using Domain.Configuration;
 using Domain.Entities.FitWorkout;
+using Domain.Entities.GroupWorkout;
 using Domain.Entities.Gym;
 using Domain.Entities.Plan;
 using Domain.Entities.User;
@@ -24,6 +25,7 @@ namespace Infra.Configuration
         public DbSet<PlanEntity> Plan => Set<PlanEntity>();
         public DbSet<FitWorkoutEntity> FitWorkout => Set<FitWorkoutEntity>();
         public DbSet<UserWorkoutEntity> UserWorkout => Set<UserWorkoutEntity>();
+        public DbSet<GroupWorkoutEntity> GroupWorkout => Set<GroupWorkoutEntity>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
