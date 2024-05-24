@@ -18,6 +18,11 @@ using Application.Gym.Commands.CreateGym;
 using Application.Gym.Commands.LogIn;
 using Application.Gym.Handlers;
 using Application.Gym.UseCase;
+using Application.Hiit.Boundaries;
+using Application.Hiit.Commands;
+using Application.Hiit.Commands.GetHiitSeriesById;
+using Application.Hiit.Handlers;
+using Application.Hiit.UseCase;
 using Application.S3.UseCase;
 using Application.Token.UseCase;
 using Application.User.Commands.AddUserEmail;
@@ -36,11 +41,13 @@ using Domain.DTOs.User;
 using Domain.Entities.FitWorkout;
 using Domain.Entities.GroupWorkout;
 using Domain.Entities.Gym;
+using Domain.Entities.Hiit;
 using Domain.Entities.Plan;
 using Domain.Entities.User;
 using Infra.Repository.FitWorkout;
 using Infra.Repository.GroupWorkout;
 using Infra.Repository.Gym;
+using Infra.Repository.Hiit;
 using Infra.Repository.Plan;
 using Infra.Repository.User;
 using MediatR;
@@ -63,6 +70,8 @@ namespace FitExerciseBack.Setup
             services.AddScoped<IPlanRepository, PlanRepository>();
             services.AddScoped<IFitWorkoutRepository, FitWorkoutRepository>();
             services.AddScoped<IGroupWorkoutRepository, GroupWorkoutRepository>();
+            services.AddScoped<IHiitRepository, HiitRepository>();
+            services.AddScoped<IHiitSerieRepository, HiitSerieRepository>();
 
             //Token
             services.AddScoped<ITokenUseCase, TokenUseCase>();
@@ -96,6 +105,11 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<UpdateGroupCommand, bool>, UpdateGroupHandler>();
             services.AddTransient<IRequestHandler<GetGroupByIdCommand, GroupWorkoutOutput>, GetGroupByIdHandler>();
             services.AddTransient<IRequestHandler<DeleteGroupByIdCommand, bool>, DeleteGroupByIdHandler>();
+
+            //hiit
+            services.AddScoped<IHiitUseCase, HiitUseCase>();
+            services.AddTransient<IRequestHandler<GetHiitByCategoryIdCommand, List<HiitOutput>>, GetHiitByCategoryIdHandler>();
+            services.AddTransient<IRequestHandler<GetHiitSeriesByIdCommand, List<HiitSerieOutput>>, GetHiitSeriesByIdHandler>();
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();
