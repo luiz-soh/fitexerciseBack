@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Domain.DTOs.UserWorkout;
 
 namespace Domain.Entities.UserWorkout
 {
@@ -17,26 +18,26 @@ namespace Domain.Entities.UserWorkout
             WorkoutRepetitions = null;
         }
 
-        // public UserWorkoutEntity(AddUserWorkoutDto dto)
-        // {
-        //     UwId = 0;
-        //     UserId = dto.UserId;
-        //     WorkoutId = dto.WorkoutId;
-        //     GroupWorkoutId = dto.GroupWorkoutId;
-        //     WorkoutSeries = dto.WorkoutSeries;
-        //     WorkoutRepetitions = dto.WorkoutRepetitions;
-        // }
+        public UserWorkoutEntity(AddUserWorkoutDto dto)
+        {
+            UwId = 0;
+            UserId = dto.UserId;
+            WorkoutId = dto.WorkoutId;
+            GroupWorkoutId = dto.GroupWorkoutId;
+            WorkoutSeries = dto.WorkoutSeries;
+            WorkoutRepetitions = dto.WorkoutRepetitions;
+        }
 
-        // public UserWorkoutEntity(UpdateUserWorkoutDto dto)
-        // {
-        //     UwId = dto.UwId;
-        //     UserId = dto.UserId;
-        //     WorkoutId = dto.WorkoutId;
-        //     GroupWorkoutId = dto.GroupWorkoutId;
-        //     WorkoutSeries = dto.WorkoutSeries;
-        //     WorkoutRepetitions = dto.WorkoutRepetitions;
-        //     WorkoutPosition = dto.WorkoutPosition;
-        // }
+        public UserWorkoutEntity(UpdateUserWorkoutDto dto)
+        {
+            UwId = dto.UwId;
+            UserId = dto.UserId;
+            WorkoutId = dto.WorkoutId;
+            GroupWorkoutId = dto.GroupWorkoutId;
+            WorkoutSeries = dto.WorkoutSeries;
+            WorkoutRepetitions = dto.WorkoutRepetitions;
+            WorkoutPosition = dto.WorkoutPosition;
+        }
 
         public UserWorkoutEntity(UserWorkoutEntity entity, int position)
         {

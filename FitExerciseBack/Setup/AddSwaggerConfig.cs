@@ -42,6 +42,5 @@ namespace FitExerciseBack.Setup
                 c.IncludeXmlComments(xmlPath);
             });
         }
-
     }
 }

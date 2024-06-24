@@ -33,6 +33,10 @@ using Application.User.Commands.SignIn;
 using Application.User.Commands.SignUp;
 using Application.User.Handlers;
 using Application.User.UseCase;
+using Application.UserWorkout.Boundaries;
+using Application.UserWorkout.Commands;
+using Application.UserWorkout.Handlers;
+using Application.UserWorkout.UseCase;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.Gym;
@@ -44,12 +48,14 @@ using Domain.Entities.Gym;
 using Domain.Entities.Hiit;
 using Domain.Entities.Plan;
 using Domain.Entities.User;
+using Domain.Entities.UserWorkout;
 using Infra.Repository.FitWorkout;
 using Infra.Repository.GroupWorkout;
 using Infra.Repository.Gym;
 using Infra.Repository.Hiit;
 using Infra.Repository.Plan;
 using Infra.Repository.User;
+using Infra.Repository.UserWorkout;
 using MediatR;
 
 namespace FitExerciseBack.Setup
@@ -72,6 +78,7 @@ namespace FitExerciseBack.Setup
             services.AddScoped<IGroupWorkoutRepository, GroupWorkoutRepository>();
             services.AddScoped<IHiitRepository, HiitRepository>();
             services.AddScoped<IHiitSerieRepository, HiitSerieRepository>();
+            services.AddScoped<IUserWorkoutRepository, UserWorkoutRepository>();
 
             //Token
             services.AddScoped<ITokenUseCase, TokenUseCase>();
@@ -110,6 +117,14 @@ namespace FitExerciseBack.Setup
             services.AddScoped<IHiitUseCase, HiitUseCase>();
             services.AddTransient<IRequestHandler<GetHiitByCategoryIdCommand, List<HiitOutput>>, GetHiitByCategoryIdHandler>();
             services.AddTransient<IRequestHandler<GetHiitSeriesByIdCommand, List<HiitSerieOutput>>, GetHiitSeriesByIdHandler>();
+
+            //UserWorkout
+            services.AddScoped<IUserWorkoutUseCase, UserWorkoutUseCase>();
+            services.AddTransient<IRequestHandler<AddUserWorkoutCommand, bool>, AddUserWorkoutHandler>();
+            services.AddTransient<IRequestHandler<GetUserExercisesCommand, List<UserExerciseOutput>>, GetUserExercisesHandler>();
+            services.AddTransient<IRequestHandler<DeleteUserWorkoutCommand, bool>, DeleteUserWorkoutHandler>();
+            services.AddTransient<IRequestHandler<ChangeUserWorkoutPositionCommand, bool>, ChangeUserWorkoutPositionHandler>();
+            services.AddTransient<IRequestHandler<UpdateUserWorkoutCommand, bool>, UpdateUserWorkoutHandler>();
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();
