@@ -29,8 +29,9 @@ namespace FitExerciseBack.Controllers
 
         [HttpGet("GetExercises")]
         [ProducesResponseType(typeof(List<ExerciseOutput>), 200)]
-        public async Task<IActionResult> GetExercises([FromHeader] int userId)
+        public async Task<IActionResult> GetExercises()
         {
+            var userId = ObterUserId();
             var command = new GetExecisesCommand(userId);
 
             var response = await _mediatorHandler.SendCommand<GetExecisesCommand, List<ExerciseOutput>>(command);

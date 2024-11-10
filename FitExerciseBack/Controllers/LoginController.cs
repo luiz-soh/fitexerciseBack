@@ -1,5 +1,6 @@
 ﻿using Application.User.Boundaries.Input;
 using Application.User.Commands.DeleteUser;
+using Application.User.Commands.RefreshToken;
 using Application.User.Commands.SignIn;
 using Application.User.Commands.SignUp;
 using Domain.Base.Communication;
@@ -51,7 +52,7 @@ namespace FitExerciseBack.Controllers
 
             if (IsValidOperation())
             {
-                return Created();
+                return StatusCode(201);
             }
             else
             {
@@ -62,7 +63,7 @@ namespace FitExerciseBack.Controllers
         [HttpDelete("DeleteUser/{userId}")]
         [SwaggerResponse(200, Description = "Sucesso")]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
-        public async Task<IActionResult> DeleteUser([FromRoute] int userId )
+        public async Task<IActionResult> DeleteUser([FromRoute] int userId)
         {
             var command = new DeleteUserCommand(userId);
 
@@ -71,6 +72,26 @@ namespace FitExerciseBack.Controllers
             if (IsValidOperation())
             {
                 return Ok();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpPost("RefreshToken")]
+        [AllowAnonymous]
+        [SwaggerResponse(200, Description = "Sucesso", Type = typeof(TokenDto))]
+        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
+        public async Task<IActionResult> RefreshToken([FromBody] UpdateTokenInput input)
+        {
+            var command = new RefreshTokenCommand(input);
+
+            var token = await _mediatorHandler.SendCommand<RefreshTokenCommand, TokenDto>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok(token);
             }
             else
             {

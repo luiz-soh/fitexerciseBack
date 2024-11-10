@@ -103,7 +103,7 @@ namespace Application.User.UseCase
         #region private methods
         private TokenDto GenerateToken(UserDto user)
         {
-            var token = _tokenUseCase.GenerateToken(user.Name, "adm", 24);
+            var token = _tokenUseCase.GenerateToken(user.Name, "adm", 24, user.Id);
 
             return new TokenDto(token, GenerateRefreshToken(), user.Id);
         }

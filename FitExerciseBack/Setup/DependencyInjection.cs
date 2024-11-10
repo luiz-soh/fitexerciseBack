@@ -29,6 +29,7 @@ using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.DeleteUser;
 using Application.User.Commands.GetUserData;
 using Application.User.Commands.GetUsersByGym;
+using Application.User.Commands.RefreshToken;
 using Application.User.Commands.SignIn;
 using Application.User.Commands.SignUp;
 using Application.User.Handlers;
@@ -91,6 +92,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<SignInCommand, TokenDto>, SignInHandler>();
             services.AddTransient<IRequestHandler<SignUpCommand, bool>, SignUpHandler>();
             services.AddTransient<IRequestHandler<DeleteUserCommand, bool>, DeleteUserHandler>();
+            services.AddTransient<IRequestHandler<RefreshTokenCommand, TokenDto>, RefreshTokenHandler>();
 
             //Gym
             services.AddScoped<IGymUseCase, GymUseCase>();

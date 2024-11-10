@@ -34,7 +34,7 @@ namespace FitExerciseBack.Controllers
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> GetGroups()
         {
-            var userId = Convert.ToInt32(HttpContext.Items["userId"]);
+            var userId = ObterUserId();
 
             var command = new GetGroupsCommand(userId);
 
@@ -55,7 +55,7 @@ namespace FitExerciseBack.Controllers
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> CreateGroup(CreateGroupInput input)
         {
-            var userId = Convert.ToInt32(HttpContext.Items["userId"]);
+            var userId = ObterUserId();
 
             var command = new CreateGroupCommand(input, userId);
 
@@ -63,7 +63,7 @@ namespace FitExerciseBack.Controllers
 
             if (IsValidOperation())
             {
-                return Created();
+                return StatusCode(201);
             }
             else
             {
@@ -114,7 +114,7 @@ namespace FitExerciseBack.Controllers
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> DeleteGroupById(int id)
         {
-            var userId = Convert.ToInt32(HttpContext.Items["userId"]);
+           var userId = ObterUserId();
 
             var command = new DeleteGroupByIdCommand(id, userId);
 

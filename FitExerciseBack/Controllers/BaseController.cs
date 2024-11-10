@@ -1,4 +1,5 @@
-﻿using Domain.Base.Messages.CommonMessages.Notification;
+﻿using System.Security.Claims;
+using Domain.Base.Messages.CommonMessages.Notification;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,15 @@ namespace FitExerciseBack.Controllers
         protected IEnumerable<string> GetMessages()
         {
             return _notificationHandler.GetNotifications().Select(x => x.Value).ToList();
+        }
+
+        protected int ObterUserId()
+        {
+            var identifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(identifier))
+                return  Convert.ToInt32(identifier);
+
+            throw new Exception("Usuário não identificado");
         }
     }
 }

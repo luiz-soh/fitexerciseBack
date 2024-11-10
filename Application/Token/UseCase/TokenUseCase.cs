@@ -27,7 +27,7 @@ namespace Application.Token.UseCase
             return encryptedData;
         }
 
-        public string GenerateToken(string name, string role, int validyHours)
+        public string GenerateToken(string name, string role, int validyHours, int userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var secret = _secrets.ClientSecret;
@@ -35,11 +35,12 @@ namespace Application.Token.UseCase
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
+                Subject = new ClaimsIdentity(
+                [
+                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                     new Claim(ClaimTypes.Name, name),
                     new Claim(ClaimTypes.Role, role)
-                }),
+                ]),
                 Expires = DateTime.UtcNow.AddHours(validyHours),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),

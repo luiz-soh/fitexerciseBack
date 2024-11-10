@@ -42,7 +42,7 @@ namespace FitExerciseBack.Controllers
         [HttpGet("GetUserExercises/{groupId}")]
         public async Task<IActionResult> GetExercises(int groupId)
         {
-            var id = Convert.ToInt32(HttpContext.Items["userId"]);
+            var id = ObterUserId();
 
             var command = new GetUserExercisesCommand(groupId, id);
 
@@ -61,7 +61,7 @@ namespace FitExerciseBack.Controllers
         [HttpDelete("DeleteUserWorkout/{workoutId}")]
         public async Task<IActionResult> DeleteUserWorkout([FromRoute] int workoutId)
         {
-            var userId = Convert.ToInt32(HttpContext.Items["userId"]);
+            var userId = ObterUserId();
 
             var command = new DeleteUserWorkoutCommand(userId, workoutId);
 

@@ -92,6 +92,7 @@ namespace Infra.Repository.User
 
             if (user != null)
             {
+                user.LastLogin = DateTime.SpecifyKind(user.LastLogin, DateTimeKind.Utc);
                 user.UserEmail = email;
                 context.FitUser.Update(user);
                 await context.SaveChangesAsync();

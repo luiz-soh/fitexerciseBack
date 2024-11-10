@@ -2,8 +2,10 @@
 using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.GetUserData;
 using Application.User.Commands.GetUsersByGym;
+using Application.User.Commands.RefreshToken;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
+using Domain.DTOs.Token;
 using Domain.DTOs.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
