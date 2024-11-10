@@ -31,7 +31,7 @@ namespace FitExerciseBack.Controllers
 
             if (IsValidOperation())
             {
-                return Created();
+                return StatusCode(201);
             }
             else
             {

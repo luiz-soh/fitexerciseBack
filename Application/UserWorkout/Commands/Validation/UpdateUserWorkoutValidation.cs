@@ -20,8 +20,7 @@ namespace Application.UserWorkout.Commands.Validation
             .GreaterThan(0).WithMessage("GroupWorkoutId é obrigatório");
 
             RuleFor(x => x.WorkoutPosition)
-            .NotNull().WithMessage("WorkoutPosition é obrigatório")
-            .GreaterThan(0).WithMessage("WorkoutPosition é obrigatório");
+            .NotNull().WithMessage("WorkoutPosition é obrigatório");
 
             RuleFor(x => x.UwId)
             .NotNull().WithMessage("UwId é obrigatório")

@@ -1,3 +1,5 @@
+using Application.User.Commands.DeleteUser.Validation;
+using Application.UserWorkout.Commands.Validation;
 using Domain.Base.Messages;
 
 namespace Application.UserWorkout.Commands
@@ -9,7 +11,8 @@ namespace Application.UserWorkout.Commands
 
         public override bool IsValid()
         {
-            return base.IsValid();
+            ValidationResult = new DeleteUserWorkoutValidation().Validate(this);
+            return ValidationResult.IsValid;
         }
     }
 }

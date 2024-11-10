@@ -66,7 +66,7 @@ namespace Infra.Repository.UserWorkout
             var workoutIds = input.Select(e => e.UwId).ToList();
 
             var userWorkouts = await context.UserWorkout.Where(e => workoutIds.Contains(e.UwId)
-                ).ToListAsync();
+                ).AsNoTracking().ToListAsync();
 
             var workoutsToChange = (from uw in userWorkouts
                                     join workoutsChange in input on uw.UwId equals workoutsChange.UwId
