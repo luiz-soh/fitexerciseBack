@@ -1,4 +1,4 @@
-name: Push ECR Deploy EC2 dev
+name: Push ECR
 
 on:
   push:
@@ -30,12 +30,16 @@ jobs:
           mask-password: "true"
           registry-type: public
 
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Build, tag, and push docker image to Amazon ECR Public
         env:
           REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           REGISTRY_ALIAS: my-ecr-public-registry-alias
           REPOSITORY: my-ecr-public-repo
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
