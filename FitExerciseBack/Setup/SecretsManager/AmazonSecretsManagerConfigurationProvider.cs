@@ -1,7 +1,4 @@
 ﻿using Amazon;
-using Amazon.Extensions.NETCore.Setup;
-using Amazon.Runtime;
-using Amazon.Runtime.CredentialManagement;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using System.Text;
@@ -13,14 +10,16 @@ namespace FitExerciseBack.Setup.SecretsManager
     {
         private readonly string _region;
         private readonly string _secretName;
-        private readonly AWSCredentials _credentials;
+        private readonly string _accessKey;
+        private readonly string _secretKey;
 
 
-        public AmazonSecretsManagerConfigurationProvider(string region, string secretName, AWSCredentials credentials)
+        public AmazonSecretsManagerConfigurationProvider(string region, string secretName, string accessKey, string secretKey)
         {
             _region = region;
             _secretName = secretName;
-            _credentials = credentials;
+            _accessKey = accessKey;
+            _secretKey = secretKey;
         }
 
         public override void Load()
@@ -36,7 +35,10 @@ namespace FitExerciseBack.Setup.SecretsManager
         private string GetSecret()
         {
             using var client =
-            new AmazonSecretsManagerClient(_credentials, RegionEndpoint.GetBySystemName(_region));
+            new AmazonSecretsManagerClient(
+                _accessKey,
+                _secretKey,
+                RegionEndpoint.GetBySystemName(_region));
 
             var request = new GetSecretValueRequest
             {

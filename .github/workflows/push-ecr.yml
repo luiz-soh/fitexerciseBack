@@ -22,13 +22,17 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: us-east-1
+        
+      - name: "Create prod file"
+        run: |
+            echo "${{ secrets.APP_SETTINGS }}" > appsettings.json
+            mv appsettings.json FitExerciseBack
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
           mask-password: "true"
-          registry-type: public
 
       - name: Set outputs
         id: vars
@@ -37,9 +41,8 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR Public
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REGISTRY_ALIAS: q2f0d7g1
           REPOSITORY: fitexerciseapi
           IMAGE_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG -f FitExerciseBack/Dockerfile .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f FitExerciseBack/Dockerfile .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG

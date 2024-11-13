@@ -1,29 +1,28 @@
-﻿using Amazon.Extensions.NETCore.Setup;
-using Amazon.Runtime;
-
-namespace FitExerciseBack.Setup.SecretsManager
+﻿namespace FitExerciseBack.Setup.SecretsManager
 {
     public class AmazonSecretsManagerConfigurationSource : IConfigurationSource
     {
         private readonly string _region;
         private readonly string _secretName;
-        private readonly AWSCredentials _credentials;
+        private readonly string _accessKey;
+        private readonly string _secretKey;
 
-        public AmazonSecretsManagerConfigurationSource(string region, string secretName, AWSCredentials credentials)
+        public AmazonSecretsManagerConfigurationSource(string region, string secretName, string accessKey, string secretKey)
         {
             _region = region;
             _secretName = secretName;
-            _credentials = credentials;
+            _accessKey = accessKey;
+            _secretKey = secretKey;
         }
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new AmazonSecretsManagerConfigurationProvider(_region, _secretName, _credentials);
+            return new AmazonSecretsManagerConfigurationProvider(_region, _secretName, _accessKey, _secretKey);
         }
 
         public void Load(IConfigurationBuilder builder)
         {
-            new AmazonSecretsManagerConfigurationProvider(_region, _secretName, _credentials).Load();
+            new AmazonSecretsManagerConfigurationProvider(_region, _secretName, _accessKey, _secretKey).Load();
         }
     }
 }

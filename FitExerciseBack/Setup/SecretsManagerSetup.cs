@@ -1,6 +1,4 @@
-﻿using Amazon.Extensions.NETCore.Setup;
-using Amazon.Runtime;
-using FitExerciseBack.Setup.SecretsManager;
+﻿using FitExerciseBack.Setup.SecretsManager;
 
 namespace FitExerciseBack.Setup
 {
@@ -9,10 +7,11 @@ namespace FitExerciseBack.Setup
         public static void AddAmazonSecretsManager(this IConfigurationBuilder configurationBuilder,
                                 string region,
                                 string secretName,
-                                AWSCredentials credentials)
+                                string accessKey,
+                                string secretKey)
         {
             var configurationSource =
-                    new AmazonSecretsManagerConfigurationSource(region, secretName, credentials);
+                    new AmazonSecretsManagerConfigurationSource(region, secretName, accessKey, secretKey);
 
             configurationBuilder.Add(configurationSource);
         }
@@ -20,9 +19,10 @@ namespace FitExerciseBack.Setup
         public static void LoadSecretsData(this IConfigurationBuilder configurationBuilder,
                         string region,
                         string secretName,
-                                AWSCredentials credentials)
+                        string accessKey,
+                        string secretKey)
         {
-            new AmazonSecretsManagerConfigurationSource(region, secretName, credentials).Load(configurationBuilder);
+            new AmazonSecretsManagerConfigurationSource(region, secretName, accessKey, secretKey).Load(configurationBuilder);
 
 
         }

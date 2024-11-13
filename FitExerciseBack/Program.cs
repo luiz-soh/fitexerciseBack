@@ -6,19 +6,42 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configurando LoggerFactory e criando uma inst�ncia de ILogger
+var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddConsole();
+    builder.AddDebug();
+});
+var logger = loggerFactory.CreateLogger<Program>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
 
-var awsOptions = builder.Configuration.GetAWSOptions();
-builder.Services.AddDefaultAWSOptions(awsOptions);
+var accessKey = string.Empty;
+var secretKey = string.Empty;
 
-var storeChain = new CredentialProfileStoreChain();
-
-if (storeChain.TryGetAWSCredentials(awsOptions.Profile, out var awsCredentials))
+if (builder.Environment.IsProduction())
 {
-    builder.Configuration.AddAmazonSecretsManager("us-east-1", "fitexercise", awsCredentials);
+    logger.LogInformation("Ambiente de Producao detectado.");
+    accessKey = builder.Configuration.GetSection("AwsAccessKeyId").Value!;
+    secretKey = builder.Configuration.GetSection("AwsSecretAccessKey").Value!;
 }
+else
+{
+    var awsOptions = builder.Configuration.GetAWSOptions();
+    builder.Services.AddDefaultAWSOptions(awsOptions);
+
+    var storeChain = new CredentialProfileStoreChain();
+    if (storeChain.TryGetAWSCredentials(awsOptions.Profile, out var awsCredentials))
+    {
+        logger.LogInformation("TryGetAWSCredentials entrou.");
+        accessKey = awsCredentials.GetCredentials().AccessKey;
+        secretKey = awsCredentials.GetCredentials().SecretKey;
+    }
+}
+
+builder.Configuration.AddAmazonSecretsManager("us-east-1", "fitexercise", accessKey, secretKey);
 
 builder.Services.Configure<Secrets>(builder.Configuration);
 
