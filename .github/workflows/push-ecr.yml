@@ -23,10 +23,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: us-east-1
         
-      - name: "Create prod file"
-        run: |
-            echo "${{ secrets.APP_SETTINGS }}" > appsettings.json
-            mv appsettings.json FitExerciseBack
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'FitExerciseBack/appsettings.json'
+          env:
+            AwsAccessKeyId:  ${{ secrets.AWS_ACCESS_KEY }}
+            AwsSecretAccessKey: ${{ secrets.AWS_SECRET_KEY }}
 
       - name: Login to Amazon ECR
         id: login-ecr
