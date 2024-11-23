@@ -14,5 +14,9 @@ namespace Domain.Entities.User
         Task AddUserEmail(string email, int userId);
         Task<UserDto> GetUserData(int userId);
         Task<List<UserDto>> GetUsersByGymId(int gymId);
+        Task<UserDto> GetUserByEmail(string email);
+        Task<int> GetUserIdByRecoverCode(string code);
+        Task<bool> AddPasswordRecoveryCode(int id, string code);
+        Task<bool> ChangeUserPassword(int userId, string password);
     }
 }

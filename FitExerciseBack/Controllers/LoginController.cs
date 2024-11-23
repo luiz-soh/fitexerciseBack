@@ -1,5 +1,7 @@
 ﻿using Application.User.Boundaries.Input;
 using Application.User.Commands.DeleteUser;
+using Application.User.Commands.ForgotPassword;
+using Application.User.Commands.RecoverPassword;
 using Application.User.Commands.RefreshToken;
 using Application.User.Commands.SignIn;
 using Application.User.Commands.SignUp;
@@ -92,6 +94,46 @@ namespace FitExerciseBack.Controllers
             if (IsValidOperation())
             {
                 return Ok(token);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpPost("ForgotPassword")]
+        [AllowAnonymous]
+        [SwaggerResponse(200, Description = "E-mail enviado com sucesso")]
+        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordInput input)
+        {
+            var command = new ForgotPasswordCommand(input);
+
+            await _mediatorHandler.SendCommand<ForgotPasswordCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpPost("RecoverPassword")]
+        [AllowAnonymous]
+        [SwaggerResponse(200, Description = "Senha alterada com sucesso")]
+        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
+        public async Task<IActionResult> RecoverPassword([FromBody] RecoverPasswordInput input)
+        {
+            var command = new RecoverPasswordCommand(input);
+
+            await _mediatorHandler.SendCommand<RecoverPasswordCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok();
             }
             else
             {

@@ -110,6 +110,68 @@ namespace Infra.Repository.User
                 return new UserDto();
         }
 
+        public async Task<UserDto> GetUserByEmail(string email)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+            var user = await context.FitUser.Where(x => x.UserEmail != null &&
+             x.UserEmail.ToLower() == email.ToLower()).FirstOrDefaultAsync();
+
+            if (user != null)
+                return new UserDto(user);
+            else
+                return new UserDto();
+        }
+
+        public async Task<bool> AddPasswordRecoveryCode(int id, string code)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+
+            var user = await context.FitUser.Where(x => x.UserId == id).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                user.LastLogin = DateTime.SpecifyKind(user.LastLogin, DateTimeKind.Utc);
+                user.RecoverCode = code;
+                context.Update(user);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> ChangeUserPassword(int userId, string password)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+
+            var user = await context.FitUser.Where(x => x.UserId == userId).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                user.LastLogin = DateTime.SpecifyKind(user.LastLogin, DateTimeKind.Utc);
+                user.Password = password;
+                context.Update(user);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<int> GetUserIdByRecoverCode(string code)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+            var user = await context.FitUser.Where(x => x.RecoverCode == code).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                user.LastLogin = DateTime.SpecifyKind(user.LastLogin, DateTimeKind.Utc);
+                user.RecoverCode = null;
+                context.Update(user);
+                await context.SaveChangesAsync();
+                return user.UserId;
+            }
+            else
+                return 0;
+        }
+
         public async Task<List<UserDto>> GetUsersByGymId(int gymId)
         {
             using var context = new ContextBase(_optionsBuilder, _secrets);

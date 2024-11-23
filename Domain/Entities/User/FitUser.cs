@@ -21,6 +21,7 @@ namespace Domain.Entities.User
             GymId = null;
             Active = false;
             LastLogin = DateTime.MinValue;
+            RecoverCode = null;
         }
         public FitUser(SignUpDto input)
         {
@@ -32,6 +33,7 @@ namespace Domain.Entities.User
             GymId = input.GymId;
             Active = true;
             LastLogin = DateTime.UtcNow;
+            RecoverCode = null;
         }
         #endregion
 
@@ -62,5 +64,8 @@ namespace Domain.Entities.User
 
         [Column("last_login")]
         public DateTime LastLogin { get; set; }
+
+        [Column("recover_code")]
+        public string? RecoverCode { get; set; }
     }
 }

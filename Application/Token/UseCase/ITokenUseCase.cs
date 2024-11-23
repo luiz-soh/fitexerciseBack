@@ -4,5 +4,6 @@
     {
         string EncryptPassword(string password);
         string GenerateToken(string name, string role, int validyHours, int userId);
+        string GenerateRecoveryCode();
     }
 }

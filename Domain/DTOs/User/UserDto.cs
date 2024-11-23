@@ -9,6 +9,7 @@ namespace Domain.DTOs.User
             Id = user.UserId;
             Name = user.Username;
             Email = user.UserEmail ?? string.Empty;
+            RecoverCode = string.Empty;
         }
 
         public UserDto()
@@ -16,10 +17,12 @@ namespace Domain.DTOs.User
             Id = 0;
             Name = string.Empty;
             Email = string.Empty;
+            RecoverCode = string.Empty;
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public string RecoverCode { get; set; }
     }
 }

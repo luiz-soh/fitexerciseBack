@@ -53,6 +53,21 @@ namespace Application.Token.UseCase
 
         }
 
+        public string GenerateRecoveryCode()
+        {
+            const string characters = "1234567890";
+            string otp = string.Empty;
+            Random random = new();
+
+            for (int i = 0; i < 6; i++)
+            {
+                int index = random.Next(0, characters.Length);
+                otp += characters[index];
+            }
+
+            return otp;
+        }
+
         #region private methods
         private static string GetStringFromHash(byte[] hash)
         {

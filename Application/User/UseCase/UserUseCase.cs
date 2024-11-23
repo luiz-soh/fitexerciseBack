@@ -1,5 +1,7 @@
 ﻿using Application.Token.UseCase;
 using Application.User.Boundaries.Input;
+using Domain.Base.Communication;
+using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Token;
 using Domain.DTOs.User;
@@ -9,19 +11,13 @@ using System.Security.Cryptography;
 namespace Application.User.UseCase
 {
 
-    public class UserUseCase : IUserUseCase
+    public class UserUseCase(IUserRepository userRepository, IMediatorHandler handler,
+        ITokenUseCase tokenUseCase) : IUserUseCase
     {
 
-        private readonly IUserRepository _userRepository;
-        private readonly ITokenUseCase _tokenUseCase;
-
-
-        public UserUseCase(IUserRepository userRepository,
-            ITokenUseCase tokenUseCase)
-        {
-            _userRepository = userRepository;
-            _tokenUseCase = tokenUseCase;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly ITokenUseCase _tokenUseCase = tokenUseCase;
+        private readonly IMediatorHandler _handler = handler;
 
         public async Task AddUserEmail(AddUserEmailInput input)
         {
@@ -64,9 +60,6 @@ namespace Application.User.UseCase
             var encryptedPassword = _tokenUseCase.EncryptPassword(input.Password);
             var signUp = new SignUpDto(input.Username, encryptedPassword, input.UserEmail, input.GymId, input.UserProfile);
             await _userRepository.SignUp(signUp);
-
-            //Mandar e-mail via SES quando produto estiver finalizado
-
         }
 
         public async Task<TokenDto> UpdateToken(UpdateTokenInput input)
@@ -99,6 +92,35 @@ namespace Application.User.UseCase
             return await _userRepository.GetUsersByGymId(gymId);
         }
 
+        public async Task<UserDto> GetRecoverCode(string email)
+        {
+            var user = await _userRepository.GetUserByEmail(email);
+
+            if (user.Id == 0)
+            {
+                await _handler.PublishNotification(new DomainNotification("credential", "E-mail não encontrado"));
+                return new UserDto();
+            }
+            else
+            {
+                var code = _tokenUseCase.GenerateRecoveryCode();
+                await _userRepository.AddPasswordRecoveryCode(user.Id, code);
+                user.RecoverCode = code;
+                return user;
+            }
+        }
+
+        public async Task<bool> RecoverUserPassword(int userId, string password)
+        {
+            var encryptedPassword = _tokenUseCase.EncryptPassword(password);
+
+            return await _userRepository.ChangeUserPassword(userId, encryptedPassword);
+        }
+
+        public async Task<int> GetUserIdByRecoveryCode(string code)
+        {
+            return await _userRepository.GetUserIdByRecoverCode(code);
+        }
 
         #region private methods
         private TokenDto GenerateToken(UserDto user)

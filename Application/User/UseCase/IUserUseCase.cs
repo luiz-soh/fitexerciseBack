@@ -15,7 +15,9 @@ namespace Application.User.UseCase
         Task<TokenDto> UpdateToken(UpdateTokenInput input);
         Task<bool> DeleteUser(int userId);
         Task<List<UserDto>> GetUsersByGymId(int gymId);
-
         Task<bool> UserExists(string username, string email);
+        Task<UserDto> GetRecoverCode(string email);
+        Task<int> GetUserIdByRecoveryCode(string code);
+        Task<bool> RecoverUserPassword(int userId, string password);
     }
 }

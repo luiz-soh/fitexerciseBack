@@ -27,8 +27,10 @@ using Application.S3.UseCase;
 using Application.Token.UseCase;
 using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.DeleteUser;
+using Application.User.Commands.ForgotPassword;
 using Application.User.Commands.GetUserData;
 using Application.User.Commands.GetUsersByGym;
+using Application.User.Commands.RecoverPassword;
 using Application.User.Commands.RefreshToken;
 using Application.User.Commands.SignIn;
 using Application.User.Commands.SignUp;
@@ -39,6 +41,7 @@ using Application.UserWorkout.Commands;
 using Application.UserWorkout.Handlers;
 using Application.UserWorkout.UseCase;
 using Domain.Base.Communication;
+using Domain.Base.Email;
 using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.Gym;
 using Domain.DTOs.Token;
@@ -57,6 +60,7 @@ using Infra.Repository.Hiit;
 using Infra.Repository.Plan;
 using Infra.Repository.User;
 using Infra.Repository.UserWorkout;
+using LaBarber.Infra.Services;
 using MediatR;
 
 namespace FitExerciseBack.Setup
@@ -93,6 +97,8 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<SignUpCommand, bool>, SignUpHandler>();
             services.AddTransient<IRequestHandler<DeleteUserCommand, bool>, DeleteUserHandler>();
             services.AddTransient<IRequestHandler<RefreshTokenCommand, TokenDto>, RefreshTokenHandler>();
+            services.AddTransient<IRequestHandler<ForgotPasswordCommand, bool>, ForgotPasswordHandler>();
+            services.AddTransient<IRequestHandler<RecoverPasswordCommand, bool>, RecoverPasswordHandler>();
 
             //Gym
             services.AddScoped<IGymUseCase, GymUseCase>();
@@ -130,6 +136,8 @@ namespace FitExerciseBack.Setup
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();
+
+            services.AddScoped<IEmailSender, EmailSender>();
         }
     }
 }
