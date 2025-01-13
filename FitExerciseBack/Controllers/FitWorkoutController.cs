@@ -5,6 +5,7 @@ using Application.FitWorkout.Commands.EditExerciseMedia;
 using Application.FitWorkout.Commands.GetExerciseById;
 using Application.FitWorkout.Commands.GetExercises;
 using Application.FitWorkout.Commands.GetGymExercises;
+using Application.Gym.Boundaries;
 using Application.S3.Boundaries;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
@@ -122,13 +123,14 @@ namespace FitExerciseBack.Controllers
 
         [HttpGet("GetGymExercises")]
         [Authorize(Roles = "gym")]
-        [ProducesResponseType(typeof(List<ExerciseOutput>), 200)]
-        public async Task<IActionResult> GetGymExercises()
+        [ProducesResponseType(typeof(PaginatedExercisesOutput), 200)]
+        public async Task<IActionResult> GetGymExercises([FromQuery] int? perPage, [FromQuery] int? page, [FromQuery] string orderby, [FromQuery] string order, [FromQuery] string? search)
         {
             var gymId = ObterGymId();
-            var command = new GetGymExecisesCommand(gymId);
+            var input = new PaginatedInput(gymId, perPage, page,orderby, order, search);
+            var command = new GetGymExecisesCommand(input);
 
-            var response = await _mediatorHandler.SendCommand<GetGymExecisesCommand, List<ExerciseOutput>>(command);
+            var response = await _mediatorHandler.SendCommand<GetGymExecisesCommand, PaginatedExercisesOutput>(command);
 
             if (IsValidOperation())
             {

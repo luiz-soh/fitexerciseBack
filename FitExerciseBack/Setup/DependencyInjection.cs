@@ -113,7 +113,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<CreateExerciseCommand, bool>, CreateExerciseHandler>();
             services.AddTransient<IRequestHandler<EditExerciseDataCommand, bool>, EditExerciseDataHandler>();
             services.AddTransient<IRequestHandler<EditExerciseMediaCommand, bool>, EditExerciseMediaHandler>();
-            services.AddTransient<IRequestHandler<GetGymExecisesCommand, List<ExerciseOutput>>, GetGymExercisesHandler>();
+            services.AddTransient<IRequestHandler<GetGymExecisesCommand, PaginatedExercisesOutput>, GetGymExercisesHandler>();
 
             //GroupWorkout
             services.AddScoped<IGroupWorkoutUseCase, GroupWorkoutUseCase>();

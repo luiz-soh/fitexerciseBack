@@ -1,3 +1,4 @@
+using Domain.Base.Paginated;
 using Domain.DTOs.FitWorkout;
 using Domain.Entities.FitWorkout;
 
@@ -27,9 +28,9 @@ namespace Application.FitWorkout.UseCase
             return await _fitWorkoutRepository.GetById(id);
         }
 
-        public async Task<List<GetExercisesDto>> GetAllExercisesByGymId(int gymId)
+        public async Task<PaginatedExercisesDto> GetAllExercisesByGymId(int gymId, int? perPage, int? page, string orderBy, string order, string? search)
         {
-            return await _fitWorkoutRepository.GetAllExercisesByGymId(gymId);
+            return  await _fitWorkoutRepository.GetAllExercisesByGymId(gymId, perPage, page, orderBy, order, search);
         }
 
         public async Task<List<GetExercisesDto>> GetExercisesByGymId(int userId, int gymId)

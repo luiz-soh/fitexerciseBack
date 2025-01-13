@@ -1,3 +1,4 @@
+using Domain.Base.Paginated;
 using Domain.DTOs.FitWorkout;
 
 namespace Domain.Entities.FitWorkout
@@ -9,7 +10,8 @@ namespace Domain.Entities.FitWorkout
         Task<List<GetExercisesDto>> GetExercises(int userId);
         Task<GetExerciseByIdDto> GetById(int id);
         Task<GetExerciseByIdDto> GetByIdWithoutS3Url(int id);
-        Task<List<GetExercisesDto>> GetAllExercisesByGymId(int gymId);
+        Task<PaginatedExercisesDto> GetAllExercisesByGymId(int gymId, int? perPage, int? page,
+            string orderBy, string order, string? search);
         Task<List<GetExercisesDto>> GetExercisesByGymId(int userId, int gymId);
     }
 }

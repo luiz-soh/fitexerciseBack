@@ -48,17 +48,17 @@ builder.Services.Configure<Secrets>(builder.Configuration);
 builder.Services.AddAuthenticationJWT(builder);
 builder.Services.AddAWSService<IAmazonS3>();
 
-// builder.Services.AddCors(options =>
-//      {
-//          options.AddPolicy("AllowAll",
-//              builder =>
-//              {
-//                  builder
-//                  .AllowAnyOrigin()
-//                  .AllowAnyMethod()
-//                  .AllowAnyHeader();
-//              });
-//      });
+builder.Services.AddCors(options =>
+     {
+         options.AddPolicy("AllowAll",
+             builder =>
+             {
+                 builder
+                 .AllowAnyOrigin()
+                 .AllowAnyMethod()
+                 .AllowAnyHeader();
+             });
+     });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenConfig();
@@ -68,7 +68,7 @@ builder.Services.RegisterService();
 
 var app = builder.Build();
 
-// app.UseCors("AllowAll");
+app.UseCors("AllowAll");
 
 app.UseSwagger();
 app.UseSwaggerUI();

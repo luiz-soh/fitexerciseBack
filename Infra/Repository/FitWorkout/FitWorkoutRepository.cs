@@ -1,3 +1,4 @@
+using Domain.Base.Paginated;
 using Domain.Configuration;
 using Domain.DTOs.FitWorkout;
 using Domain.Entities.FitWorkout;
@@ -77,16 +78,60 @@ namespace Infra.Repository.FitWorkout
                           )).AsNoTracking().ToListAsync();
         }
 
-        public async Task<List<GetExercisesDto>> GetAllExercisesByGymId(int gymId)
+public async Task<PaginatedExercisesDto> GetAllExercisesByGymId(int gymId, int? perPage, int? page, string orderBy, string order, string? search)
+{
+    perPage ??= 10;
+    page ??= 0;
+    var skip = perPage * page;
+
+    var query = _contextBase.FitWorkout
+        .Where(x => x.GymId == gymId || (gymId == 1 && x.GymId == null));
+
+    if (!string.IsNullOrEmpty(search))
+    {
+        query = query.Where(x => x.WorkoutName.ToLower().Contains(search.ToLower()));
+    }
+
+    if (!string.IsNullOrEmpty(orderBy))
+    {
+        if (order?.ToLower() == "desc")
         {
-            return await _contextBase.FitWorkout.Where(x => x.GymId == gymId || (gymId == 1 && x.GymId == null)).Select(x => new GetExercisesDto(
-                           x.WorkoutId,
-                           x.WorkoutName,
-                           _secrets.Value.S3Url + x.S3Path,
-                           _secrets.Value.S3Url + x.ImgPath,
-                           x.Type
-                          )).AsNoTracking().ToListAsync();
+            query = orderBy.ToLower() switch
+            {
+                "name" => query.OrderByDescending(x => x.WorkoutName),
+                "id" => query.OrderByDescending(x => x.WorkoutId),
+                _ => query.OrderByDescending(x => x.WorkoutId)
+            };
         }
+        else
+        {
+            query = orderBy.ToLower() switch
+            {
+                "name" => query.OrderBy(x => x.WorkoutName),
+                "id" => query.OrderBy(x => x.WorkoutId),
+                _ => query.OrderBy(x => x.WorkoutId)
+            };
+        }
+    }
+    else
+    {
+         query = query.OrderByDescending(x => x.WorkoutId);
+    }
+
+    // DTO after created the entire query
+    var exercisesDtoQuery = query.Select(x => new GetExercisesDto(
+        x.WorkoutId,
+        x.WorkoutName,
+        _secrets.Value.S3Url + x.S3Path,
+        _secrets.Value.S3Url + x.ImgPath,
+        x.Type
+    ));
+
+    var total = await query.CountAsync();
+    var listExercises = await exercisesDtoQuery.Skip(skip ?? 0).Take(perPage ?? 10).ToListAsync();
+
+    return new PaginatedExercisesDto(total, listExercises);
+}
 
         public async Task<List<GetExercisesDto>> GetExercisesByGymId(int userId, int gymId)
         {
