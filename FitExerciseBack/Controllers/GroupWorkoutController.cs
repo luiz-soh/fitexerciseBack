@@ -13,8 +13,6 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace FitExerciseBack.Controllers
 {
-
-    //TODO userId Deve ser pego do token e não do header
     [Route("[controller]")]
     [Authorize]
     [ApiController]
@@ -28,6 +26,8 @@ namespace FitExerciseBack.Controllers
             _mediatorHandler = mediatorHandler;
         }
 
+
+//TODO GetUserGroups by userId para o site da academia
 
         [HttpGet("GetGroups")]
         [SwaggerResponse(200, Description = "Lista de grupos", Type = typeof(List<GroupWorkoutOutput>))]

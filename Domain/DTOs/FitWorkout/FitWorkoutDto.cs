@@ -1,20 +1,22 @@
 
 using Domain.DTOs.S3;
 using Domain.Entities.FitWorkout;
+using Domain.Enums;
 
 namespace Domain.DTOs.FitWorkout
 {
     public class FitWorkoutDto
     {
         #region constructors
-        public FitWorkoutDto(UploadDto upload, int? gymId)
+        public FitWorkoutDto(UploadDto upload, int? gymId, int workoutId)
         {
             S3Path = upload.VideoPath;
             WorkoutName = upload.WorkoutName;
-            WorkoutId = 0;
+            WorkoutId = workoutId;
             FileName = upload.FileName;
             ImgPath = upload.ImgPath;
             GymId = gymId;
+            Type = upload.Type;
         }
 
         public FitWorkoutDto(GetExerciseByIdDto input, string s3NewPath, string imgNewPath)
@@ -25,6 +27,7 @@ namespace Domain.DTOs.FitWorkout
             ImgPath = imgNewPath;
             GymId = input.GymId;
             FileName = input.FileName;
+            Type = input.Type;
         }
 
         public FitWorkoutDto()
@@ -35,6 +38,7 @@ namespace Domain.DTOs.FitWorkout
             FileName = string.Empty;
             ImgPath = string.Empty;
             GymId = null;
+            Type = ExerciseTypeEnum.Peito;
         }
 
         public FitWorkoutDto(FitWorkoutEntity workout)
@@ -45,6 +49,7 @@ namespace Domain.DTOs.FitWorkout
             FileName = workout.FileName;
             ImgPath = workout.ImgPath;
             GymId = workout.GymId;
+            Type = workout.Type;
         }
 
         #endregion
@@ -55,5 +60,6 @@ namespace Domain.DTOs.FitWorkout
         public string FileName { get; set; }
         public string ImgPath { get; set; }
         public int? GymId { get; set; }
+        public ExerciseTypeEnum Type { get; set; }
     }
 }

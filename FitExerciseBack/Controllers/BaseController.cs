@@ -28,7 +28,16 @@ namespace FitExerciseBack.Controllers
         {
             var identifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!string.IsNullOrEmpty(identifier))
-                return  Convert.ToInt32(identifier);
+                return Convert.ToInt32(identifier);
+
+            throw new Exception("Usuário não identificado");
+        }
+
+        protected int ObterGymId()
+        {
+            var identifier = User.FindFirstValue(ClaimTypes.Actor);
+            if (!string.IsNullOrEmpty(identifier))
+                return Convert.ToInt32(identifier);
 
             throw new Exception("Usuário não identificado");
         }

@@ -1,5 +1,3 @@
-using Application.FitWorkout.Commands.CreateExercise;
-using Application.FitWorkout.Commands.EditExerciseData;
 using Application.FitWorkout.Commands.EditExerciseMedia;
 using Application.FitWorkout.UseCase;
 using Application.S3.Boundaries;
@@ -35,13 +33,13 @@ namespace Application.FitWorkout.Handlers
 
                 if (exercise != null)
                 {
-                    var uploadInput = new UploadInput(exercise.WorkoutName, input.Video!, input.Img!, exercise.GymId);
+                    var uploadInput = new UploadInput(exercise.WorkoutName, input.Video!, input.Img!, exercise.GymId, exercise.Type);
 
                     var upload = await _s3UseCase.UploadFile(uploadInput);
 
                     if (!string.IsNullOrEmpty(upload.ImgPath))
                     {
-                        var workout = new FitWorkoutDto(upload, exercise.GymId);
+                        var workout = new FitWorkoutDto(upload, exercise.GymId, input.WorkoutId);
                         await _fitWorkoutUseCase.UpdateWorkoutData(workout);
 
                         if (upload.ImgPath != exercise.ImgPath)

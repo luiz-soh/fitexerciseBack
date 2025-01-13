@@ -4,6 +4,7 @@ using Application.FitWorkout.Commands.EditExerciseData;
 using Application.FitWorkout.Commands.EditExerciseMedia;
 using Application.FitWorkout.Commands.GetExerciseById;
 using Application.FitWorkout.Commands.GetExercises;
+using Application.FitWorkout.Commands.GetGymExercises;
 using Application.S3.Boundaries;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
@@ -119,5 +120,24 @@ namespace FitExerciseBack.Controllers
             }
         }
 
+        [HttpGet("GetGymExercises")]
+        [Authorize(Roles = "gym")]
+        [ProducesResponseType(typeof(List<ExerciseOutput>), 200)]
+        public async Task<IActionResult> GetGymExercises()
+        {
+            var gymId = ObterGymId();
+            var command = new GetGymExecisesCommand(gymId);
+
+            var response = await _mediatorHandler.SendCommand<GetGymExecisesCommand, List<ExerciseOutput>>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
     }
 }

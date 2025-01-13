@@ -27,7 +27,7 @@ namespace Application.Token.UseCase
             return encryptedData;
         }
 
-        public string GenerateToken(string name, string role, int validyHours, int userId)
+        public string GenerateToken(string name, string role, int validyHours, int userId, int gymId = 0)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var secret = _secrets.ClientSecret;
@@ -46,6 +46,9 @@ namespace Application.Token.UseCase
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
+
+            if (gymId > 0)
+                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Actor, gymId.ToString()));
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 

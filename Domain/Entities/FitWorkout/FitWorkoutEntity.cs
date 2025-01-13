@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Domain.DTOs.FitWorkout;
+using Domain.Enums;
 
 namespace Domain.Entities.FitWorkout
 {
@@ -15,6 +16,7 @@ namespace Domain.Entities.FitWorkout
             FileName = fitworkout.FileName;
             ImgPath = fitworkout.ImgPath;
             GymId = fitworkout.GymId;
+            Type = fitworkout.Type;
         }
 
         public FitWorkoutEntity()
@@ -45,5 +47,8 @@ namespace Domain.Entities.FitWorkout
 
         [Column("gym_id")]
         public int? GymId { get; set; }
+
+        [Column("workout_type")]
+        public ExerciseTypeEnum Type { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace Application.S3.UseCase
             {
                 return new UploadDto();
             }
-            return new UploadDto(videoLocation, imgLocation, upload.ExerciseName, upload.File!.FileName);
+            return new UploadDto(videoLocation, imgLocation, upload.ExerciseName, upload.File!.FileName, upload.Type);
         }
 
         public async Task<bool> CopyObject(string path, string newPath)

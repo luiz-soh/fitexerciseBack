@@ -15,6 +15,10 @@ namespace Application.FitWorkout.Commands.EditExerciseData.Validation
             RuleFor(x => x.ExerciseName)
                 .NotEmpty()
                 .WithMessage("Nome do exercicio é obrigatório");
+
+            RuleFor(x => x.Type)
+                .NotNull()
+                .WithMessage("Tipo do exercicio é obrigatório");
         }
     }
 }

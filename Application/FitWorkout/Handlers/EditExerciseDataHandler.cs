@@ -1,4 +1,3 @@
-using Application.FitWorkout.Commands.CreateExercise;
 using Application.FitWorkout.Commands.EditExerciseData;
 using Application.FitWorkout.UseCase;
 using Application.S3.UseCase;
@@ -33,25 +32,36 @@ namespace Application.FitWorkout.Handlers
 
                 if (exercise != null)
                 {
-                    var imgNewPath = _s3UseCase.EditFileLocation(exercise.ImgPath, input.ExerciseName);
-                    var videoNewPath = _s3UseCase.EditFileLocation(exercise.S3Path, input.ExerciseName);
+                    var changedExerciseName = input.ExerciseName != exercise.WorkoutName;
+                    var imgPath = exercise.ImgPath;
+                    var videoPath = exercise.S3Path;
 
-                    var imageResponse = await _s3UseCase.CopyObject(exercise.ImgPath, imgNewPath);
-                    var videoResponse = await _s3UseCase.CopyObject(exercise.S3Path, videoNewPath);
-
-                    if (!imageResponse || !videoResponse)
+                    if (changedExerciseName)
                     {
-                        await _mediatorHandler.PublishNotification(new DomainNotification(request.MessageType, "ocorreu um erro ao atualizar o exercício"));
-                        return false;
+                        imgPath = _s3UseCase.EditFileLocation(exercise.ImgPath, input.ExerciseName);
+                        videoPath = _s3UseCase.EditFileLocation(exercise.S3Path, input.ExerciseName);
+
+                        var imageResponse = await _s3UseCase.CopyObject(exercise.ImgPath, imgPath);
+                        var videoResponse = await _s3UseCase.CopyObject(exercise.S3Path, videoPath);
+
+                        if (!imageResponse || !videoResponse)
+                        {
+                            await _mediatorHandler.PublishNotification(new DomainNotification(request.MessageType, "ocorreu um erro ao atualizar o exercício"));
+                            return false;
+                        }
                     }
 
                     exercise.WorkoutName = input.ExerciseName;
+                    exercise.Type = input.Type;
 
-                    var exerciseDto = new FitWorkoutDto(exercise, videoNewPath, imgNewPath);
+                    var exerciseDto = new FitWorkoutDto(exercise, videoPath, imgPath);
                     await _fitWorkoutUseCase.UpdateWorkoutData(exerciseDto);
 
-                    await _s3UseCase.DeleteObject(exercise.S3Path);
-                    await _s3UseCase.DeleteObject(exercise.ImgPath);
+                    if (changedExerciseName)
+                    {
+                        await _s3UseCase.DeleteObject(exercise.S3Path);
+                        await _s3UseCase.DeleteObject(exercise.ImgPath);
+                    }
                     return true;
                 }
 

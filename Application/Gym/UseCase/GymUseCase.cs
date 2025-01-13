@@ -48,7 +48,7 @@ namespace Application.Gym.UseCase
 
         private GymTokenDto GenerateToken(GymDto gym)
         {
-            var token = _tokenUseCase.GenerateToken(gym.GymName, "gym", 1, gym.GymId);
+            var token = _tokenUseCase.GenerateToken(gym.GymName, "gym", 1, gym.GymId, gym.GymId);
 
             return new GymTokenDto(gym.GymId, gym.GymName, token);
         }

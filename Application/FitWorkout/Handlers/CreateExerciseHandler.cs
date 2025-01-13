@@ -30,7 +30,7 @@ namespace Application.FitWorkout.Handlers
                 var upload = await _s3UseCase.UploadFile(request.Upload);
                 if (!string.IsNullOrEmpty(upload.ImgPath))
                 {
-                    var workout = new FitWorkoutDto(upload, request.Upload.GymId);
+                    var workout = new FitWorkoutDto(upload, request.Upload.GymId, 0);
                     await _fitWorkoutUseCase.AddWorkout(workout);
                     return true;
                 }

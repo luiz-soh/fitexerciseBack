@@ -72,7 +72,8 @@ namespace Infra.Repository.FitWorkout
                            workout.WorkoutId,
                            workout.WorkoutName,
                            _secrets.Value.S3Url + workout.S3Path,
-                           _secrets.Value.S3Url + workout.ImgPath
+                           _secrets.Value.S3Url + workout.ImgPath,
+                           workout.Type
                           )).AsNoTracking().ToListAsync();
         }
 
@@ -82,7 +83,8 @@ namespace Infra.Repository.FitWorkout
                            x.WorkoutId,
                            x.WorkoutName,
                            _secrets.Value.S3Url + x.S3Path,
-                           _secrets.Value.S3Url + x.ImgPath
+                           _secrets.Value.S3Url + x.ImgPath,
+                           x.Type
                           )).AsNoTracking().ToListAsync();
         }
 
@@ -96,13 +98,13 @@ namespace Infra.Repository.FitWorkout
                            workout.WorkoutId,
                            workout.WorkoutName,
                            _secrets.Value.S3Url + workout.S3Path,
-                           _secrets.Value.S3Url + workout.ImgPath
+                           _secrets.Value.S3Url + workout.ImgPath,
+                           workout.Type
                           )).AsNoTracking().ToListAsync();
         }
 
         public void Dispose()
         {
-            // Suppress finalization.
             GC.SuppressFinalize(this);
         }
     }

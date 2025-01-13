@@ -19,6 +19,10 @@ namespace Application.FitWorkout.Commands.CreateExercise.Validation
             RuleFor(x => x.Img)
                 .NotNull()
                 .WithMessage("Imagem é obrigatório");
+            
+            RuleFor(x => x.Type)
+                .NotNull()
+                .WithMessage("Tipo do exercicio é obrigatório");
         }
     }
 }

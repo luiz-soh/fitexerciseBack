@@ -1,4 +1,5 @@
 using Domain.DTOs.FitWorkout;
+using Domain.Enums;
 
 namespace Application.FitWorkout.Boundaries
 {
@@ -23,6 +24,7 @@ namespace Application.FitWorkout.Boundaries
             WorkoutId = workout.WorkoutId;
             GymId = workout.GymId;
             FileName = workout.FileName;
+            Type = workout.Type;
         }
         #endregion
 
@@ -32,5 +34,6 @@ namespace Application.FitWorkout.Boundaries
         public string ImgPath { get; set; }
         public int? GymId { get; set; }
         public string FileName { get; set; }
+        public ExerciseTypeEnum Type { get; set; }
     }
 }

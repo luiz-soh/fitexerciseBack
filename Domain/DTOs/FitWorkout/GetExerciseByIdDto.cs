@@ -1,4 +1,5 @@
 using Domain.Entities.FitWorkout;
+using Domain.Enums;
 
 namespace Domain.DTOs.FitWorkout
 {
@@ -13,6 +14,7 @@ namespace Domain.DTOs.FitWorkout
             ImgPath = string.Empty;
             FileName = string.Empty;
             GymId = null;
+            Type = ExerciseTypeEnum.Peito;
         }
 
         public GetExerciseByIdDto(FitWorkoutEntity workout)
@@ -23,6 +25,7 @@ namespace Domain.DTOs.FitWorkout
             WorkoutId = workout.WorkoutId;
             GymId = workout.GymId;
             FileName = workout.FileName;
+            Type = workout.Type;
         }
 
         public GetExerciseByIdDto(FitWorkoutEntity workout, string videoPath, string imgPath)
@@ -33,6 +36,7 @@ namespace Domain.DTOs.FitWorkout
             WorkoutId = workout.WorkoutId;
             FileName = workout.FileName;
             GymId = workout.GymId;
+            Type = workout.Type;
         }
 
         #endregion
@@ -43,5 +47,6 @@ namespace Domain.DTOs.FitWorkout
         public string ImgPath { get; set; }
         public int? GymId { get; set; }
         public string FileName { get; set; }
+        public ExerciseTypeEnum Type { get; set; }
     }
 }

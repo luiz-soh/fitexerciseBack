@@ -4,6 +4,7 @@ using Application.FitWorkout.Commands.EditExerciseData;
 using Application.FitWorkout.Commands.EditExerciseMedia;
 using Application.FitWorkout.Commands.GetExerciseById;
 using Application.FitWorkout.Commands.GetExercises;
+using Application.FitWorkout.Commands.GetGymExercises;
 using Application.FitWorkout.Handlers;
 using Application.FitWorkout.UseCase;
 using Application.GroupWorkout.Boundaries;
@@ -112,6 +113,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<CreateExerciseCommand, bool>, CreateExerciseHandler>();
             services.AddTransient<IRequestHandler<EditExerciseDataCommand, bool>, EditExerciseDataHandler>();
             services.AddTransient<IRequestHandler<EditExerciseMediaCommand, bool>, EditExerciseMediaHandler>();
+            services.AddTransient<IRequestHandler<GetGymExecisesCommand, List<ExerciseOutput>>, GetGymExercisesHandler>();
 
             //GroupWorkout
             services.AddScoped<IGroupWorkoutUseCase, GroupWorkoutUseCase>();
