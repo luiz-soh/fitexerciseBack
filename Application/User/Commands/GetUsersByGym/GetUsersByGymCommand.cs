@@ -1,21 +1,17 @@
-﻿using Application.User.Commands.GetUserData.Validation;
+﻿using Application.Gym.Boundaries;
+using Application.User.Boundaries.Output;
+using Application.User.Commands.GetUsersByGym.Validation;
 using Domain.Base.Messages;
-using Domain.DTOs.User;
 
 namespace Application.User.Commands.GetUsersByGym
 {
-    public class GetUsersByGymCommand : Command<List<UserDto>>
+    public class GetUsersByGymCommand(PaginatedInput input) : Command<PaginatedUsersOutput>
     {
-        public GetUsersByGymCommand(int gymId)
-        {
-            GymId = gymId;
-        }
-
-        public int GymId { get; set; }
+        public PaginatedInput Input { get; set; } = input;
 
         public override bool IsValid()
         {
-            ValidationResult = new GetUserDataValidation().Validate(GymId);
+            ValidationResult = new GetUsersByGymValidation().Validate(Input);
             return ValidationResult.IsValid;
         }
     }

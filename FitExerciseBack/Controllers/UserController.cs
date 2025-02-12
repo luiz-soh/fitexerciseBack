@@ -1,4 +1,6 @@
-﻿using Application.User.Boundaries.Input;
+﻿using Application.Gym.Boundaries;
+using Application.User.Boundaries.Input;
+using Application.User.Boundaries.Output;
 using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.GetUserData;
 using Application.User.Commands.GetUsersByGym;
@@ -65,13 +67,15 @@ namespace FitExerciseBack.Controllers
 
         [HttpGet("GetUsersByGymId/{gymId}")]
         [Authorize(Roles = "gym")]
-        [SwaggerResponse(200, Description = "Sucesso", Type = typeof(List<UserDto>))]
+        [SwaggerResponse(200, Description = "Sucesso", Type = typeof(PaginatedUsersOutput))]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
-        public async Task<IActionResult> GetUserByGymId([FromRoute] int gymId)
+        public async Task<IActionResult> GetUserByGymId([FromQuery] int? perPage, [FromQuery] int? page, [FromQuery] string orderby, [FromQuery] string order, [FromQuery] string? search)
         {
-            var command = new GetUsersByGymCommand(gymId);
+            var gymId = ObterGymId();
+            var input = new PaginatedInput(gymId, perPage, page, orderby, order, search);
+            var command = new GetUsersByGymCommand(input);
 
-            var users = await _mediatorHandler.SendCommand<GetUsersByGymCommand, List<UserDto>>(command);
+            var users = await _mediatorHandler.SendCommand<GetUsersByGymCommand, PaginatedUsersOutput>(command);
 
             if (IsValidOperation())
             {

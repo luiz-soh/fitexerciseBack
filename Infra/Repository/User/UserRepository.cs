@@ -1,4 +1,5 @@
-﻿using Domain.Configuration;
+﻿using Domain.Base.Paginated;
+using Domain.Configuration;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.User;
 using Domain.Entities.User;
@@ -172,11 +173,57 @@ namespace Infra.Repository.User
                 return 0;
         }
 
-        public async Task<List<UserDto>> GetUsersByGymId(int gymId)
+        public async Task<PaginatedDto<UserDto>> GetUsersByGymId(int gymId, int? perPage, int? page, string orderBy, string order, string? search)
         {
+            perPage ??= 10;
+            page ??= 0;
+            var skip = perPage * page;
+
             using var context = new ContextBase(_optionsBuilder, _secrets);
 
-            return await context.FitUser.Where(x => x.GymId == gymId).Select(u => new UserDto(u)).AsNoTracking().ToListAsync();
+            var query = context.FitUser
+                .Where(x => x.GymId == gymId || (gymId == 1 && x.GymId == null));
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.Username.ToLower().Contains(search.ToLower()) ||
+                (x.UserEmail != null && x.UserEmail.ToLower().Contains(search.ToLower())));
+            }
+
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                if (order?.ToLower() == "desc")
+                {
+                    query = orderBy.ToLower() switch
+                    {
+                        "name" => query.OrderByDescending(x => x.Username),
+                        "id" => query.OrderByDescending(x => x.UserId),
+                        "email" => query.OrderByDescending(x => x.UserEmail),
+                        _ => query.OrderByDescending(x => x.UserId)
+                    };
+                }
+                else
+                {
+                    query = orderBy.ToLower() switch
+                    {
+                        "name" => query.OrderBy(x => x.Username),
+                        "id" => query.OrderBy(x => x.UserId),
+                        "email" => query.OrderBy(x => x.UserEmail),
+                        _ => query.OrderBy(x => x.UserId)
+                    };
+                }
+            }
+            else
+            {
+                query = query.OrderByDescending(x => x.UserId);
+            }
+
+            var usersDtoQuery = query.Select(u => new UserDto(u));
+
+            var total = await query.CountAsync();
+            var listUsers = await usersDtoQuery.Skip(skip ?? 0).Take(perPage ?? 10).ToListAsync();
+
+            return new PaginatedDto<UserDto>(total, listUsers);
         }
     }
 }

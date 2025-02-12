@@ -1,22 +1,20 @@
-using Domain.DTOs.FitWorkout;
-
 namespace Domain.Base.Paginated
 {
-        public class PaginatedExercisesDto
+    public class PaginatedDto<T>
     {
-        public PaginatedExercisesDto()
+        public PaginatedDto()
         {
             Total = 0;
-            Exercises = [];
+            ObjectDto = [];
         }
 
-        public PaginatedExercisesDto(int total, List<GetExercisesDto>? exercises)
+        public PaginatedDto(int total, List<T>? objectDto)
         {
             Total = total;
-            Exercises = exercises ?? [];
+            ObjectDto = objectDto ?? [];
         }
 
         public int Total { get; set; }
-        public List<GetExercisesDto> Exercises { get; set; }
+        public List<T> ObjectDto { get; set; }
     }
 }

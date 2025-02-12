@@ -26,6 +26,7 @@ using Application.Hiit.Handlers;
 using Application.Hiit.UseCase;
 using Application.S3.UseCase;
 using Application.Token.UseCase;
+using Application.User.Boundaries.Output;
 using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.DeleteUser;
 using Application.User.Commands.ForgotPassword;
@@ -93,7 +94,7 @@ namespace FitExerciseBack.Setup
             services.AddScoped<IUserUseCase, UserUseCase>();
             services.AddTransient<IRequestHandler<AddUserEmailCommand, bool>, AddUserEmailHandler>();
             services.AddTransient<IRequestHandler<GetUserDataCommand, UserDto>, GetUserDataHandler>();
-            services.AddTransient<IRequestHandler<GetUsersByGymCommand, List<UserDto>>, GetUsersByGymHandler>();
+            services.AddTransient<IRequestHandler<GetUsersByGymCommand, PaginatedUsersOutput>, GetUsersByGymHandler>();
             services.AddTransient<IRequestHandler<SignInCommand, TokenDto>, SignInHandler>();
             services.AddTransient<IRequestHandler<SignUpCommand, bool>, SignUpHandler>();
             services.AddTransient<IRequestHandler<DeleteUserCommand, bool>, DeleteUserHandler>();

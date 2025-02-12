@@ -1,13 +1,13 @@
-﻿using Application.User.Commands.GetUsersByGym;
+﻿using Application.User.Boundaries.Output;
+using Application.User.Commands.GetUsersByGym;
 using Application.User.UseCase;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
-using Domain.DTOs.User;
 using MediatR;
 
 namespace Application.User.Handlers
 {
-    public class GetUsersByGymHandler : IRequestHandler<GetUsersByGymCommand, List<UserDto>>
+    public class GetUsersByGymHandler : IRequestHandler<GetUsersByGymCommand, PaginatedUsersOutput>
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IUserUseCase _userUseCase;
@@ -18,19 +18,23 @@ namespace Application.User.Handlers
             _userUseCase = userUseCase;
         }
 
-        public async Task<List<UserDto>> Handle(GetUsersByGymCommand request, CancellationToken cancellationToken)
+        public async Task<PaginatedUsersOutput> Handle(GetUsersByGymCommand request, CancellationToken cancellationToken)
         {
+            var input = request.Input;
             if (request.IsValid())
             {
-                return await _userUseCase.GetUsersByGymId(request.GymId);
+                var users = await _userUseCase.GetUsersByGymId(input.GymId, input.PerPage, input.Page,
+                 input.Orderby ?? string.Empty, input.Order ?? string.Empty, input.Search);
+                if (users != null)
+                {
+                    return new PaginatedUsersOutput(users);
+                }
             }
-
             foreach (var error in request.ValidationResult.Errors)
             {
                 await _mediatorHandler.PublishNotification(new DomainNotification(request.MessageType, error.ErrorMessage));
             }
-
-            return new List<UserDto>();
+            return new PaginatedUsersOutput();
         }
     }
 }

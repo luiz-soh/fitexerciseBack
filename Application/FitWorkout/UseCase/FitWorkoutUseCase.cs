@@ -28,7 +28,7 @@ namespace Application.FitWorkout.UseCase
             return await _fitWorkoutRepository.GetById(id);
         }
 
-        public async Task<PaginatedExercisesDto> GetAllExercisesByGymId(int gymId, int? perPage, int? page, string orderBy, string order, string? search)
+        public async Task<PaginatedDto<GetExercisesDto>> GetAllExercisesByGymId(int gymId, int? perPage, int? page, string orderBy, string order, string? search)
         {
             return  await _fitWorkoutRepository.GetAllExercisesByGymId(gymId, perPage, page, orderBy, order, search);
         }

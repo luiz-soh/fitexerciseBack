@@ -18,16 +18,10 @@ namespace FitExerciseBack.Controllers
     [ApiController]
     [Authorize]
     [Route("[controller]")]
-    public class FitWorkoutController : BaseController
+    public class FitWorkoutController(INotificationHandler<DomainNotification> notificationHandler,
+        IMediatorHandler mediatorHandler) : BaseController(notificationHandler)
     {
-        // private readonly IS3Service _s3Service;
-        private readonly IMediatorHandler _mediatorHandler;
-
-        public FitWorkoutController(INotificationHandler<DomainNotification> notificationHandler,
-            IMediatorHandler mediatorHandler) : base(notificationHandler)
-        {
-            _mediatorHandler = mediatorHandler;
-        }
+        private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 
         [HttpGet("GetExercises")]
         [ProducesResponseType(typeof(List<ExerciseOutput>), 200)]

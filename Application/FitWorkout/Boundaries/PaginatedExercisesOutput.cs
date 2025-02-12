@@ -1,4 +1,5 @@
 using Domain.Base.Paginated;
+using Domain.DTOs.FitWorkout;
 
 namespace Application.FitWorkout.Boundaries
 {
@@ -10,10 +11,10 @@ namespace Application.FitWorkout.Boundaries
             Exercises = [];
         }
 
-        public PaginatedExercisesOutput(PaginatedExercisesDto dto)
+        public PaginatedExercisesOutput(PaginatedDto<GetExercisesDto> dto)
         {
             Total = dto.Total;
-            Exercises = [.. dto.Exercises.Select(x => new ExerciseOutput(x))];
+            Exercises = [.. dto.ObjectDto.Select(x => new ExerciseOutput(x))];
         }
 
         public int Total { get; set; }

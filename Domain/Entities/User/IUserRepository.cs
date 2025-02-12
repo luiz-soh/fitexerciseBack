@@ -1,4 +1,5 @@
-﻿using Domain.DTOs.Authentication;
+﻿using Domain.Base.Paginated;
+using Domain.DTOs.Authentication;
 using Domain.DTOs.User;
 
 namespace Domain.Entities.User
@@ -13,7 +14,7 @@ namespace Domain.Entities.User
         Task<bool> DeleteUser(int userId);
         Task AddUserEmail(string email, int userId);
         Task<UserDto> GetUserData(int userId);
-        Task<List<UserDto>> GetUsersByGymId(int gymId);
+        Task<PaginatedDto<UserDto>> GetUsersByGymId(int gymId, int? perPage, int? page, string orderBy, string order, string? search);
         Task<UserDto> GetUserByEmail(string email);
         Task<int> GetUserIdByRecoverCode(string code);
         Task<bool> AddPasswordRecoveryCode(int id, string code);

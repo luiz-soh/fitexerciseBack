@@ -2,6 +2,7 @@
 using Application.User.Boundaries.Input;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
+using Domain.Base.Paginated;
 using Domain.DTOs.Authentication;
 using Domain.DTOs.Token;
 using Domain.DTOs.User;
@@ -87,9 +88,9 @@ namespace Application.User.UseCase
             return await _userRepository.DeleteUser(userId);
         }
 
-        public async Task<List<UserDto>> GetUsersByGymId(int gymId)
+        public async Task<PaginatedDto<UserDto>> GetUsersByGymId(int gymId, int? perPage, int? page, string orderBy, string order, string? search)
         {
-            return await _userRepository.GetUsersByGymId(gymId);
+            return await _userRepository.GetUsersByGymId(gymId, perPage, page, orderBy, order, search);
         }
 
         public async Task<UserDto> GetRecoverCode(string email)
