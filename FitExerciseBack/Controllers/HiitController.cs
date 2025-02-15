@@ -1,4 +1,5 @@
 
+using Application.Gym.UseCase;
 using Application.Hiit.Boundaries;
 using Application.Hiit.Commands;
 using Application.Hiit.Commands.GetHiitSeriesById;
@@ -19,7 +20,7 @@ namespace FitExerciseBack.Controllers
         private readonly IMediatorHandler _mediatorHandler;
 
         public HiitController(INotificationHandler<DomainNotification> notificationHandler,
-            IMediatorHandler mediatorHandler) : base(notificationHandler)
+            IMediatorHandler mediatorHandler, IGymUseCase gymUseCase) : base(notificationHandler, gymUseCase)
         {
             _mediatorHandler = mediatorHandler;
         }

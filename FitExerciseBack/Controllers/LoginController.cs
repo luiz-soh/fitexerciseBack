@@ -1,4 +1,5 @@
-﻿using Application.User.Boundaries.Input;
+﻿using Application.Gym.UseCase;
+using Application.User.Boundaries.Input;
 using Application.User.Commands.DeleteUser;
 using Application.User.Commands.ForgotPassword;
 using Application.User.Commands.RecoverPassword;
@@ -20,7 +21,7 @@ namespace FitExerciseBack.Controllers
     [Route("[controller]")]
     public class LoginController(
         INotificationHandler<DomainNotification> notificationHandler,
-        IMediatorHandler mediatorHandler) : BaseController(notificationHandler)
+        IMediatorHandler mediatorHandler, IGymUseCase gymUseCase) : BaseController(notificationHandler, gymUseCase)
     {
         private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 

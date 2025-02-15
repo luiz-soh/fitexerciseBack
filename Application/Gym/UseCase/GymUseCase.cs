@@ -2,19 +2,21 @@ using Application.Gym.Boundaries;
 using Application.Token.UseCase;
 using Domain.DTOs.Gym;
 using Domain.Entities.Gym;
+using Domain.Entities.User;
 
 namespace Application.Gym.UseCase
 {
-    public class GymUseCase : IGymUseCase
+    public class GymUseCase(ITokenUseCase tokenUseCase, IGymRepository gymRepository, IUserRepository userRepository) : IGymUseCase
     {
-        private readonly IGymRepository _gymRepository;
-        private readonly ITokenUseCase _tokenUseCase;
+        private readonly IGymRepository _gymRepository = gymRepository;
+        private readonly ITokenUseCase _tokenUseCase = tokenUseCase;
+        private readonly IUserRepository _userRepository = userRepository;
 
-        public GymUseCase(ITokenUseCase tokenUseCase, IGymRepository gymRepository)
+        public async Task<bool> CanWorkWithUser(int userId, int gymId)
         {
-            _tokenUseCase = tokenUseCase;
-            _gymRepository = gymRepository;
+            return await _userRepository.UserBelongsToGym(userId, gymId);
         }
+
         public async Task<bool> CreateGym(CreateGymInput input)
         {
             var encryptedPassword = _tokenUseCase.EncryptPassword(input.Password);

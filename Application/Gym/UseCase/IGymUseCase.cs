@@ -9,5 +9,6 @@ namespace Application.Gym.UseCase
         Task<bool> GymExists(string login);
         Task<bool> CreateGym(CreateGymInput input);
         Task<GymTokenDto> LogIn(LoginInput login);
+        Task<bool> CanWorkWithUser(int userId, int gymId);
     }
 }

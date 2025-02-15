@@ -1,10 +1,12 @@
 using Application.Gym.Boundaries;
 using Application.Gym.Commands.CreateGym;
 using Application.Gym.Commands.LogIn;
+using Application.Gym.UseCase;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.Gym;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,17 +14,14 @@ namespace FitExerciseBack.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class GymController : BaseController
+    [Authorize(Roles = "gym")]
+    public class GymController(INotificationHandler<DomainNotification> notificationHandler,
+        IMediatorHandler mediatorHandler, IGymUseCase gymUseCase) : BaseController(notificationHandler, gymUseCase)
     {
-        private readonly IMediatorHandler _mediatorHandler;
-
-        public GymController(INotificationHandler<DomainNotification> notificationHandler,
-            IMediatorHandler mediatorHandler) : base(notificationHandler)
-        {
-            _mediatorHandler = mediatorHandler;
-        }
+        private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 
         [HttpPost("CreateGym")]
+        [AllowAnonymous]
         [SwaggerResponse(201, Description = "Sucesso")]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> UpdateUserEmail([FromBody] CreateGymInput input)
@@ -42,6 +41,7 @@ namespace FitExerciseBack.Controllers
         }
 
         [HttpPost("GetGymToken")]
+        [AllowAnonymous]
         [SwaggerResponse(200, Description = "Sucesso", Type = typeof(GymTokenDto))]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> GetGymToken([FromBody] LoginInput input)

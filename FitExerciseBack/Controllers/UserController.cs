@@ -1,4 +1,5 @@
 ﻿using Application.Gym.Boundaries;
+using Application.Gym.UseCase;
 using Application.User.Boundaries.Input;
 using Application.User.Boundaries.Output;
 using Application.User.Commands.AddUserEmail;
@@ -17,15 +18,10 @@ namespace FitExerciseBack.Controllers
     [ApiController]
     [Authorize]
     [Route("[controller]")]
-    public class UserController : BaseController
+    public class UserController(INotificationHandler<DomainNotification> notificationHandler,
+        IMediatorHandler mediatorHandler, IGymUseCase gymUseCase) : BaseController(notificationHandler, gymUseCase)
     {
-        private readonly IMediatorHandler _mediatorHandler;
-
-        public UserController(INotificationHandler<DomainNotification> notificationHandler,
-            IMediatorHandler mediatorHandler) : base(notificationHandler)
-        {
-            _mediatorHandler = mediatorHandler;
-        }
+        private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 
         [HttpPut("UpdateUserEmail")]
         [SwaggerResponse(200, Description = "Sucesso")]
@@ -65,13 +61,13 @@ namespace FitExerciseBack.Controllers
             }
         }
 
-        [HttpGet("GetUsersByGymId/{gymId}")]
+        [HttpGet("GetUsersByGymId")]
         [Authorize(Roles = "gym")]
         [SwaggerResponse(200, Description = "Sucesso", Type = typeof(PaginatedUsersOutput))]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> GetUserByGymId([FromQuery] int? perPage, [FromQuery] int? page, [FromQuery] string orderby, [FromQuery] string order, [FromQuery] string? search)
         {
-            var gymId = ObterGymId();
+            var gymId = GetGymId();
             var input = new PaginatedInput(gymId, perPage, page, orderby, order, search);
             var command = new GetUsersByGymCommand(input);
 

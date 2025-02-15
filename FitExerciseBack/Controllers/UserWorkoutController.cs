@@ -1,4 +1,5 @@
-﻿using Application.UserWorkout.Boundaries;
+﻿using Application.Gym.UseCase;
+using Application.UserWorkout.Boundaries;
 using Application.UserWorkout.Commands;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
@@ -11,20 +12,25 @@ namespace FitExerciseBack.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    public class UserWorkoutController : BaseController
+    public class UserWorkoutController(INotificationHandler<DomainNotification> notificationHandler,
+        IMediatorHandler mediatorHandler, IGymUseCase gymUseCase) : BaseController(notificationHandler, gymUseCase)
     {
-        // private readonly IUserWorkoutService _userWorkoutService;
-        private readonly IMediatorHandler _mediatorHandler;
-
-        public UserWorkoutController(INotificationHandler<DomainNotification> notificationHandler,
-            IMediatorHandler mediatorHandler) : base(notificationHandler)
-        {
-            _mediatorHandler = mediatorHandler;
-        }
+        private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 
         [HttpPost("AddUserWorkout")]
         public async Task<IActionResult> AddUserWorkout(AddUserWorkoutInput input)
         {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(input.UserId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                input.UserId = GetUserId();
+            }
             var command = new AddUserWorkoutCommand(input);
 
             await _mediatorHandler.SendCommand<AddUserWorkoutCommand, bool>(command);
@@ -40,11 +46,21 @@ namespace FitExerciseBack.Controllers
         }
 
         [HttpGet("GetUserExercises/{groupId}")]
-        public async Task<IActionResult> GetExercises(int groupId)
+        public async Task<IActionResult> GetUserExercises([FromRoute] int groupId, [FromQuery] int userId = 0)
         {
-            var id = ObterUserId();
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
 
-            var command = new GetUserExercisesCommand(groupId, id);
+            var command = new GetUserExercisesCommand(groupId, userId);
 
             var response = await _mediatorHandler.SendCommand<GetUserExercisesCommand, List<UserExerciseOutput>>(command);
 
@@ -59,11 +75,21 @@ namespace FitExerciseBack.Controllers
         }
 
         [HttpDelete("DeleteUserWorkout/{workoutId}")]
-        public async Task<IActionResult> DeleteUserWorkout([FromRoute] int workoutId)
+        public async Task<IActionResult> DeleteUserWorkout([FromRoute] int workoutId, [FromQuery] int? userId)
         {
-            var userId = ObterUserId();
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId ?? 0))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
 
-            var command = new DeleteUserWorkoutCommand(userId, workoutId);
+            var command = new DeleteUserWorkoutCommand((int)userId!, workoutId);
 
             await _mediatorHandler.SendCommand<DeleteUserWorkoutCommand, bool>(command);
 
@@ -98,6 +124,17 @@ namespace FitExerciseBack.Controllers
         [HttpPut("UpdateUserWorkout")]
         public async Task<IActionResult> UpdateUserWorkout(UpdateUserWorkoutInput input)
         {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(input.UserId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                input.UserId = GetUserId();
+            }
             var command = new UpdateUserWorkoutCommand(input);
 
             await _mediatorHandler.SendCommand<UpdateUserWorkoutCommand, bool>(command);

@@ -225,5 +225,12 @@ namespace Infra.Repository.User
 
             return new PaginatedDto<UserDto>(total, listUsers);
         }
+
+        public async Task<bool> UserBelongsToGym(int userId, int gymId)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+
+            return await context.FitUser.AnyAsync(x => x.UserId == userId && (x.GymId == gymId || (gymId == 1 && x.GymId == null)));
+        }
     }
 }

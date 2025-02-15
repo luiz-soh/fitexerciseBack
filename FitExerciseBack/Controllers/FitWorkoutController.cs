@@ -6,6 +6,7 @@ using Application.FitWorkout.Commands.GetExerciseById;
 using Application.FitWorkout.Commands.GetExercises;
 using Application.FitWorkout.Commands.GetGymExercises;
 using Application.Gym.Boundaries;
+using Application.Gym.UseCase;
 using Application.S3.Boundaries;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
@@ -19,15 +20,26 @@ namespace FitExerciseBack.Controllers
     [Authorize]
     [Route("[controller]")]
     public class FitWorkoutController(INotificationHandler<DomainNotification> notificationHandler,
-        IMediatorHandler mediatorHandler) : BaseController(notificationHandler)
+        IMediatorHandler mediatorHandler, IGymUseCase gymUseCase) : BaseController(notificationHandler, gymUseCase)
     {
         private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 
         [HttpGet("GetExercises")]
         [ProducesResponseType(typeof(List<ExerciseOutput>), 200)]
-        public async Task<IActionResult> GetExercises()
+        public async Task<IActionResult> GetExercises([FromQuery] int userId = 0)
         {
-            var userId = ObterUserId();
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
+            
             var command = new GetExecisesCommand(userId);
 
             var response = await _mediatorHandler.SendCommand<GetExecisesCommand, List<ExerciseOutput>>(command);
@@ -120,8 +132,8 @@ namespace FitExerciseBack.Controllers
         [ProducesResponseType(typeof(PaginatedExercisesOutput), 200)]
         public async Task<IActionResult> GetGymExercises([FromQuery] int? perPage, [FromQuery] int? page, [FromQuery] string orderby, [FromQuery] string order, [FromQuery] string? search)
         {
-            var gymId = ObterGymId();
-            var input = new PaginatedInput(gymId, perPage, page,orderby, order, search);
+            var gymId = GetGymId();
+            var input = new PaginatedInput(gymId, perPage, page, orderby, order, search);
             var command = new GetGymExecisesCommand(input);
 
             var response = await _mediatorHandler.SendCommand<GetGymExecisesCommand, PaginatedExercisesOutput>(command);

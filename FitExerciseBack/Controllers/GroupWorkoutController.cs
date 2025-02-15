@@ -4,6 +4,7 @@ using Application.GroupWorkout.Commands.CreateGroup;
 using Application.GroupWorkout.Commands.DeleteGroupById;
 using Application.GroupWorkout.Commands.GetGroupById;
 using Application.GroupWorkout.Commands.UpdateGroup;
+using Application.Gym.UseCase;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using MediatR;
@@ -16,27 +17,29 @@ namespace FitExerciseBack.Controllers
     [Route("[controller]")]
     [Authorize]
     [ApiController]
-    public class GroupWorkoutController : BaseController
+    public class GroupWorkoutController(INotificationHandler<DomainNotification> notificationHandler,
+    IMediatorHandler mediatorHandler, IGymUseCase gymUseCase) : BaseController(notificationHandler, gymUseCase)
     {
-        private readonly IMediatorHandler _mediatorHandler;
-
-        public GroupWorkoutController(INotificationHandler<DomainNotification> notificationHandler,
-        IMediatorHandler mediatorHandler) : base(notificationHandler)
-        {
-            _mediatorHandler = mediatorHandler;
-        }
-
-
-//TODO GetUserGroups by userId para o site da academia
+        private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 
         [HttpGet("GetGroups")]
         [SwaggerResponse(200, Description = "Lista de grupos", Type = typeof(List<GroupWorkoutOutput>))]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
-        public async Task<IActionResult> GetGroups()
+        public async Task<IActionResult> GetGroups([FromQuery] int userId = 0)
         {
-            var userId = ObterUserId();
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
 
-            var command = new GetGroupsCommand(userId);
+            var command = new GetGroupsCommand((int)userId!);
 
             var response = await _mediatorHandler.SendCommand<GetGroupsCommand, List<GroupWorkoutOutput>>(command);
 
@@ -55,8 +58,15 @@ namespace FitExerciseBack.Controllers
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> CreateGroup(CreateGroupInput input)
         {
-            var userId = ObterUserId();
-
+            var userId = GetUserId();
+            if (IsGymUser())
+            {
+                if (!await CanOperate(input.UserId))
+                {
+                    return NotFound();
+                }
+                userId = input.UserId;
+            }
             var command = new CreateGroupCommand(input, userId);
 
             await _mediatorHandler.SendCommand<CreateGroupCommand, bool>(command);
@@ -76,6 +86,17 @@ namespace FitExerciseBack.Controllers
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
         public async Task<IActionResult> UpdateGroup(UpdateGroupInput input)
         {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(input.UserId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                input.UserId = GetUserId();
+            }
             var command = new UpdateGroupCommand(input);
 
             await _mediatorHandler.SendCommand<UpdateGroupCommand, bool>(command);
@@ -93,8 +114,15 @@ namespace FitExerciseBack.Controllers
         [HttpGet("GetGroupById/{id}")]
         [SwaggerResponse(200, Description = "Grupo", Type = typeof(GroupWorkoutOutput))]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
-        public async Task<IActionResult> GetGroupById(int id)
+        public async Task<IActionResult> GetGroupById([FromRoute] int id, [FromQuery] int userId = 0)
         {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId))
+                {
+                    return NotFound();
+                }
+            }
             var command = new GetGroupByIdCommand(id);
 
             var group = await _mediatorHandler.SendCommand<GetGroupByIdCommand, GroupWorkoutOutput>(command);
@@ -112,10 +140,19 @@ namespace FitExerciseBack.Controllers
         [HttpDelete("DeleteGroupById/{id}")]
         [SwaggerResponse(200, Description = "Grupo deletado")]
         [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
-        public async Task<IActionResult> DeleteGroupById(int id)
+        public async Task<IActionResult> DeleteGroupById([FromRoute] int id, [FromQuery] int userId = 0)
         {
-           var userId = ObterUserId();
-
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
             var command = new DeleteGroupByIdCommand(id, userId);
 
             await _mediatorHandler.SendCommand<DeleteGroupByIdCommand, bool>(command);
