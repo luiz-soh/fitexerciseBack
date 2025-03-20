@@ -1,4 +1,4 @@
-name: Push ECR
+name: Deploy
 
 on:
   push:
@@ -49,3 +49,22 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f FitExerciseBack/Dockerfile .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: fitexercise-api
+          IMAGE_TAG: ${{ steps.vars.outputs.sha_short }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.SSH_KEY }}
+          envs: ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
+          script: |
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            docker kill fitexercise
+            docker rm $(docker ps -qa)
+            docker rmi $(docker images -qa) --force
+            docker run --name fitexercise -d -p 80:8080 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

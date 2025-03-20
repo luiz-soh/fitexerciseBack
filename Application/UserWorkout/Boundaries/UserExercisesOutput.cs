@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs.UserWorkout;
+using Domain.Enums;
 
 namespace Application.UserWorkout.Boundaries
 {
@@ -15,6 +16,7 @@ namespace Application.UserWorkout.Boundaries
             WorkoutPosition = dto.WorkoutPosition;
             WorkoutRepetitions = dto.WorkoutRepetitions;
             GroupId = dto.GroupId;
+            Type = dto.Type;
         }
 
         public UserExerciseOutput()
@@ -28,6 +30,7 @@ namespace Application.UserWorkout.Boundaries
             WorkoutRepetitions = null;
             WorkoutPosition = 0;
             GroupId = 0;
+            Type = ExerciseTypeEnum.Peito;
         }
 
         public int Id { get; set; }
@@ -39,5 +42,6 @@ namespace Application.UserWorkout.Boundaries
         public string? WorkoutRepetitions { get; set; }
         public int WorkoutPosition { get; set; }
         public int GroupId { get; set; }
+        public ExerciseTypeEnum Type { get; set; }
     }
 }

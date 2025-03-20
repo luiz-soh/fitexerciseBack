@@ -55,7 +55,8 @@ namespace Infra.Repository.UserWorkout
                            uW.WorkoutSeries,
                            uW.WorkoutRepetitions,
                            uW.WorkoutPosition,
-                           groupId
+                           groupId,
+                           workout.Type
                           )).AsNoTracking().ToListAsync();
         }
 

@@ -1,10 +1,12 @@
-﻿namespace Domain.DTOs.UserWorkout
+﻿using Domain.Enums;
+
+namespace Domain.DTOs.UserWorkout
 {
     public class UserExercisesDto
     {
         public UserExercisesDto(int workoutId, string name, string s3Path,
             string imgPath, int uwId, int? workoutSeries, string? workoutRepetitions,
-            int workoutPosition, int groupId)
+            int workoutPosition, int groupId, ExerciseTypeEnum type)
         {
             Id = workoutId;
             Name = name;
@@ -15,6 +17,7 @@
             WorkoutPosition = workoutPosition;
             WorkoutRepetitions = workoutRepetitions;
             GroupId = groupId;
+            Type = type;
         }
 
         public UserExercisesDto()
@@ -39,5 +42,6 @@
         public string? WorkoutRepetitions { get; set; }
         public int WorkoutPosition { get; set; }
         public int GroupId { get; set; }
+        public ExerciseTypeEnum Type { get; set; }
     }
 }
