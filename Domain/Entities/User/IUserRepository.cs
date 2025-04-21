@@ -20,5 +20,6 @@ namespace Domain.Entities.User
         Task<bool> AddPasswordRecoveryCode(int id, string code);
         Task<bool> ChangeUserPassword(int userId, string password);
         Task<bool> UserBelongsToGym(int userId, int gymId);
+        Task UpdateNextChangeByUserId(int userId, DateOnly nextChange);
     }
 }

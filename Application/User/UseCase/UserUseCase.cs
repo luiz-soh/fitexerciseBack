@@ -55,6 +55,11 @@ namespace Application.User.UseCase
             return await _userRepository.UserAlreadyExists(username, email);
         }
 
+        public async Task UpdateNextChange(int userId, DateOnly nextChange)
+        {
+            await _userRepository.UpdateNextChangeByUserId(userId, nextChange);
+        }
+
         public async Task SignUp(SignUpInput input)
         {
 

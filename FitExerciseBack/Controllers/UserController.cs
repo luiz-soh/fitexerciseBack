@@ -5,6 +5,7 @@ using Application.User.Boundaries.Output;
 using Application.User.Commands.AddUserEmail;
 using Application.User.Commands.GetUserData;
 using Application.User.Commands.GetUsersByGym;
+using Application.User.Commands.UpdateNextChange;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.User;
@@ -40,6 +41,29 @@ namespace FitExerciseBack.Controllers
             {
                 return BadRequest(GetMessages());
             }
+        }
+
+        [HttpPut("UpdateNextChange")]
+        [SwaggerResponse(200, Description = "Suceso")]
+        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
+        public async Task<IActionResult> UpdateNextChange([FromBody] UpdateNextChangeInput input)
+        {
+            var userId = GetUserId();
+            if (userId > 0)
+            {
+                var command = new UpdateNextChangeCommand(input, userId);
+                await _mediatorHandler.SendCommand<UpdateNextChangeCommand, bool>(command);
+                if (IsValidOperation())
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(GetMessages());
+                }
+            }
+            else
+                return NotFound();
         }
 
         [HttpGet("GetUserData/{userId}")]

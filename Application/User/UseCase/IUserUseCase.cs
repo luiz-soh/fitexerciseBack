@@ -20,5 +20,6 @@ namespace Application.User.UseCase
         Task<UserDto> GetRecoverCode(string email);
         Task<int> GetUserIdByRecoveryCode(string code);
         Task<bool> RecoverUserPassword(int userId, string password);
+        Task UpdateNextChange(int userId, DateOnly nextChange);
     }
 }

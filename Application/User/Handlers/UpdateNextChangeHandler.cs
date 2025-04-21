@@ -1,4 +1,4 @@
-using Application.User.Commands.SignUp;
+using Application.User.Commands.UpdateNextChange;
 using Application.User.UseCase;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
@@ -6,25 +6,25 @@ using MediatR;
 
 namespace Application.User.Handlers
 {
-    public class SignUpHandler(IMediatorHandler mediatorHandler, IUserUseCase userUseCase) : IRequestHandler<SignUpCommand, bool>
+    public class UpdateNextChangeHandler(IMediatorHandler mediatorHandler, IUserUseCase userUseCase) : IRequestHandler<UpdateNextChangeCommand, bool>
     {
         private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
         private readonly IUserUseCase _userUseCase = userUseCase;
 
-        public async Task<bool> Handle(SignUpCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateNextChangeCommand request, CancellationToken cancellationToken)
         {
             if (request.IsValid())
             {
                 var input = request.Input;
-                var userExists = await _userUseCase.UserExists(input.Username, input.UserEmail ?? string.Empty);
+                var user = await _userUseCase.GetUserData(request.UserId);
 
-                if (userExists)
+                if (user.Id == 0)
                 {
-                    await _mediatorHandler.PublishNotification(new DomainNotification(request.MessageType, "Usuário ou e-mail ja cadastrado"));
+                    await _mediatorHandler.PublishNotification(new DomainNotification(request.MessageType, "Usuário não encontrado"));
                 }
                 else
                 {
-                    await _userUseCase.SignUp(input);
+                    await _userUseCase.UpdateNextChange(request.UserId, input.NextChange);
 
                     return true;
                 }

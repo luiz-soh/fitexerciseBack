@@ -36,6 +36,7 @@ using Application.User.Commands.RecoverPassword;
 using Application.User.Commands.RefreshToken;
 using Application.User.Commands.SignIn;
 using Application.User.Commands.SignUp;
+using Application.User.Commands.UpdateNextChange;
 using Application.User.Handlers;
 using Application.User.UseCase;
 using Application.UserWorkout.Boundaries;
@@ -101,6 +102,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<RefreshTokenCommand, TokenDto>, RefreshTokenHandler>();
             services.AddTransient<IRequestHandler<ForgotPasswordCommand, bool>, ForgotPasswordHandler>();
             services.AddTransient<IRequestHandler<RecoverPasswordCommand, bool>, RecoverPasswordHandler>();
+            services.AddTransient<IRequestHandler<UpdateNextChangeCommand, bool>, UpdateNextChangeHandler>();
 
             //Gym
             services.AddScoped<IGymUseCase, GymUseCase>();

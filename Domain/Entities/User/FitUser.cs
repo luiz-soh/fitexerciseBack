@@ -67,5 +67,8 @@ namespace Domain.Entities.User
 
         [Column("recover_code")]
         public string? RecoverCode { get; set; }
+
+        [Column("next_change")]
+        public DateOnly NextChange { get; set; }
     }
 }

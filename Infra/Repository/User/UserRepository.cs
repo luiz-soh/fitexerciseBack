@@ -232,5 +232,19 @@ namespace Infra.Repository.User
 
             return await context.FitUser.AnyAsync(x => x.UserId == userId && (x.GymId == gymId || (gymId == 1 && x.GymId == null)));
         }
+
+        public async Task UpdateNextChangeByUserId(int userId, DateOnly nextChange)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+
+            var user = await context.FitUser.Where(x => x.UserId == userId).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                user.LastLogin = DateTime.SpecifyKind(user.LastLogin, DateTimeKind.Utc);
+                user.NextChange = nextChange;
+                context.FitUser.Update(user);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

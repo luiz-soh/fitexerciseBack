@@ -10,6 +10,7 @@ namespace Domain.DTOs.User
             Name = user.Username;
             Email = user.UserEmail ?? string.Empty;
             RecoverCode = string.Empty;
+            NextChange = user.NextChange.ToString("d"); //Short date pattern
         }
 
         public UserDto()
@@ -18,11 +19,13 @@ namespace Domain.DTOs.User
             Name = string.Empty;
             Email = string.Empty;
             RecoverCode = string.Empty;
+            NextChange = string.Empty;
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string RecoverCode { get; set; }
+        public string NextChange { get; set; }
     }
 }
