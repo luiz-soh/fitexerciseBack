@@ -10,7 +10,7 @@ namespace Domain.DTOs.User
             Name = user.Username;
             Email = user.UserEmail ?? string.Empty;
             RecoverCode = string.Empty;
-            NextChange = user.NextChange.ToString("d"); //Short date pattern
+            NextChange = user.NextChange.ToString("dd/MM/yyyy"); //Short date pattern
         }
 
         public UserDto()
