@@ -43,6 +43,8 @@ using Application.UserWorkout.Boundaries;
 using Application.UserWorkout.Commands;
 using Application.UserWorkout.Handlers;
 using Application.UserWorkout.UseCase;
+using Application.UserWorkout.v2.Commands;
+using Application.UserWorkout.v2.Handlers;
 using Domain.Base.Communication;
 using Domain.Base.Email;
 using Domain.Base.Messages.CommonMessages.Notification;
@@ -133,11 +135,13 @@ namespace FitExerciseBack.Setup
 
             //UserWorkout
             services.AddScoped<IUserWorkoutUseCase, UserWorkoutUseCase>();
-            services.AddTransient<IRequestHandler<AddUserWorkoutCommand, bool>, AddUserWorkoutHandler>();
+            services.AddTransient<IRequestHandler<AddUserWorkoutCommandOld, bool>, AddUserWorkoutHandlerOld>();
             services.AddTransient<IRequestHandler<GetUserExercisesCommand, List<UserExerciseOutput>>, GetUserExercisesHandler>();
             services.AddTransient<IRequestHandler<DeleteUserWorkoutCommand, bool>, DeleteUserWorkoutHandler>();
             services.AddTransient<IRequestHandler<ChangeUserWorkoutPositionCommand, bool>, ChangeUserWorkoutPositionHandler>();
             services.AddTransient<IRequestHandler<UpdateUserWorkoutCommand, bool>, UpdateUserWorkoutHandler>();
+            //V2
+            services.AddTransient<IRequestHandler<AddUserWorkoutCommand, bool>, AddUserWorkoutHandler>();
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();

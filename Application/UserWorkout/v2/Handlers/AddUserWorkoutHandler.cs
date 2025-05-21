@@ -1,32 +1,32 @@
 using Application.UserWorkout.Commands;
 using Application.UserWorkout.UseCase;
+using Application.UserWorkout.v2.Commands;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.UserWorkout;
 using MediatR;
 
-namespace Application.UserWorkout.Handlers
+namespace Application.UserWorkout.v2.Handlers
 {
-    public class AddUserWorkoutHandlerOld : IRequestHandler<AddUserWorkoutCommandOld, bool>
+    public class AddUserWorkoutHandler : IRequestHandler<AddUserWorkoutCommand, bool>
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IUserWorkoutUseCase _useCase;
 
-        public AddUserWorkoutHandlerOld(IUserWorkoutUseCase useCase, IMediatorHandler handler)
+        public AddUserWorkoutHandler(IUserWorkoutUseCase useCase, IMediatorHandler handler)
         {
             _useCase = useCase;
             _mediatorHandler = handler;
         }
-
-        public async Task<bool> Handle(AddUserWorkoutCommandOld request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddUserWorkoutCommand request, CancellationToken cancellationToken)
         {
             if (request.IsValid())
             {
                 try
                 {
                     var input = request.Input;
-                    var dto = new AddUserWorkoutDto(input.UserId, input.WorkoutId, input.GroupWorkoutId, input.WorkoutSeries, input.WorkoutRepetition);
-                    await _useCase.AddUserWorkout(dto);
+                    var dto = new SaveUserWorkoutDto(input.GroupId, input.WorkoutSeries, input.WorkoutRepetition, input.WorkoutId);
+                    await _useCase.SaveUserWorkout(input.UserId, dto);
                     return true;
                 }
                 catch

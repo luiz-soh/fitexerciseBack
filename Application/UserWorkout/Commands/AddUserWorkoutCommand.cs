@@ -4,13 +4,13 @@ using Domain.Base.Messages;
 
 namespace Application.UserWorkout.Commands
 {
-    public class AddUserWorkoutCommand(AddUserWorkoutInput input) : Command<bool>
+    public class AddUserWorkoutCommandOld(AddUserWorkoutInputOld input) : Command<bool>
     {
-        public AddUserWorkoutInput Input { get; set; } = input;
+        public AddUserWorkoutInputOld Input { get; set; } = input;
 
         public override bool IsValid()
         {
-            ValidationResult = new AddUserWorkoutValidation().Validate(Input);
+            ValidationResult = new AddUserWorkoutValidationOld().Validate(Input);
             return ValidationResult.IsValid;
         }
     }

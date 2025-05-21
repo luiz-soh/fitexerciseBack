@@ -1,3 +1,5 @@
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 using Domain.Configuration;
@@ -6,7 +8,6 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurando LoggerFactory e criando uma inst�ncia de ILogger
 var loggerFactory = LoggerFactory.Create(builder =>
 {
     builder.AddConsole();
@@ -46,7 +47,9 @@ builder.Configuration.AddAmazonSecretsManager("us-east-1", "fitexercise", access
 builder.Services.Configure<Secrets>(builder.Configuration);
 
 builder.Services.AddAuthenticationJWT(builder);
+builder.Services.AddAWSService<IAmazonDynamoDB>();
 builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
 
 builder.Services.AddCors(options =>
      {

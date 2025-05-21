@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Amazon.DynamoDBv2.DataModel;
 using Domain.Configuration;
 using Domain.DTOs.UserWorkout;
 using Domain.Entities.UserWorkout;
@@ -11,10 +13,12 @@ namespace Infra.Repository.UserWorkout
     {
         private readonly DbContextOptions<ContextBase> _optionsBuilder;
         private readonly IOptions<Secrets> _secrets;
-        public UserWorkoutRepository(IOptions<Secrets> secrets)
+        private readonly IDynamoDBContext _dinamoDBContext;
+        public UserWorkoutRepository(IOptions<Secrets> secrets, IDynamoDBContext dynamoDBContext)
         {
             _secrets = secrets;
             _optionsBuilder = new DbContextOptions<ContextBase>();
+            _dinamoDBContext = dynamoDBContext;
         }
 
         public async Task AddUserWorkout(AddUserWorkoutDto input)
@@ -35,6 +39,25 @@ namespace Infra.Repository.UserWorkout
                 context.UserWorkout.Remove(userWorkout);
                 await context.SaveChangesAsync();
             }
+        }
+
+        public async Task SaveUserWorkout(SaveUserWorkoutDto dto)
+        {
+            if (dto.WorkoutId is not null)
+            {
+                using var context = new ContextBase(_optionsBuilder, _secrets);
+                var workout = await context.FitWorkout.Where(x => x.WorkoutId == dto.WorkoutId).AsNoTracking().FirstOrDefaultAsync();
+                if (workout is not null)
+                {
+                    dto.ImgUrl = _secrets.Value.S3Url + workout.ImgPath;
+                    dto.VideoUrl = _secrets.Value.S3Url + workout.S3Path;
+                }
+            }
+
+            var workoutPlan = JsonSerializer.Serialize(dto);
+
+            var entity = new DynamoUserWorkout(dto.GroupId, workoutPlan);
+            await _dinamoDBContext.SaveAsync(entity);
         }
 
         public async Task<List<UserExercisesDto>> GetUserExercises(int userId, int groupId)
