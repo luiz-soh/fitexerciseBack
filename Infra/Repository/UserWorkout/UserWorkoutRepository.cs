@@ -41,7 +41,8 @@ namespace Infra.Repository.UserWorkout
             }
         }
 
-        public async Task SaveUserWorkout(SaveUserWorkoutDto dto)
+        // Queremos deixar duplicar se mandar duas vezes o mesmo SaveUserWorkoutDto
+        public async Task SaveUserWorkout(int groupId, SaveUserWorkoutDto dto)
         {
             if (dto.WorkoutId is not null)
             {
@@ -51,12 +52,21 @@ namespace Infra.Repository.UserWorkout
                 {
                     dto.ImgUrl = _secrets.Value.S3Url + workout.ImgPath;
                     dto.VideoUrl = _secrets.Value.S3Url + workout.S3Path;
+                    dto.WorkoutName = workout.WorkoutName;
                 }
             }
+            List<SaveUserWorkoutDto> workoutPlan = [];
+            workoutPlan.Add(dto);
+            var dynamoWorkout = await _dinamoDBContext.LoadAsync<DynamoUserWorkout>(groupId);
+            if (dynamoWorkout is not null)
+            {
+                var currentPlan = JsonSerializer.Deserialize<List<SaveUserWorkoutDto>>(dynamoWorkout.WorkoutPlan);
+                if (currentPlan is not null)
+                    workoutPlan.AddRange(currentPlan);
+            }
 
-            var workoutPlan = JsonSerializer.Serialize(dto);
-
-            var entity = new DynamoUserWorkout(dto.GroupId, workoutPlan);
+            var plan = JsonSerializer.Serialize(workoutPlan);
+            var entity = new DynamoUserWorkout(groupId, plan);
             await _dinamoDBContext.SaveAsync(entity);
         }
 

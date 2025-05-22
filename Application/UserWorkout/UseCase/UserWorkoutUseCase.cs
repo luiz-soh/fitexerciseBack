@@ -55,18 +55,18 @@ namespace Application.UserWorkout.UseCase
             await _repository.UpdateUserWorkout(dto);
         }
 
-        public async Task SaveUserWorkout(int userId, SaveUserWorkoutDto input)
+        public async Task SaveUserWorkout(int userId, int groupId, SaveUserWorkoutDto input)
         {
-            var group = await _groupWorkoutRepository.GetGroupById(input.GroupId);
+            var group = await _groupWorkoutRepository.GetGroupById(groupId);
             if (group is not null && group.UserId == userId)
             {
-                await _repository.SaveUserWorkout(input);
+                await _repository.SaveUserWorkout(groupId, input);
             }
             else
             {
                 await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
             }
-            
+
         }
     }
 }

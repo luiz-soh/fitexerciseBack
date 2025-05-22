@@ -5,7 +5,7 @@ namespace Domain.Entities.UserWorkout
      public interface IUserWorkoutRepository
     {
         Task AddUserWorkout(AddUserWorkoutDto input);
-        Task SaveUserWorkout(SaveUserWorkoutDto dto);
+        Task SaveUserWorkout(int groupId, SaveUserWorkoutDto dto);
         Task<List<UserExercisesDto>> GetUserExercises(int userId, int groupId);
         Task DeleteUserWorkoutId(int userId, int workoutId);
         Task ChangeUserWorkoutPosition(List<ChangeUserWorkoutPositionDto> input);

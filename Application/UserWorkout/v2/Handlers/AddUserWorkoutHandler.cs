@@ -25,8 +25,8 @@ namespace Application.UserWorkout.v2.Handlers
                 try
                 {
                     var input = request.Input;
-                    var dto = new SaveUserWorkoutDto(input.GroupId, input.WorkoutSeries, input.WorkoutRepetition, input.WorkoutId);
-                    await _useCase.SaveUserWorkout(input.UserId, dto);
+                    var dto = new SaveUserWorkoutDto(input.Position, input.WorkoutSeries, input.WorkoutRepetition, input.WorkoutId, input.WorkoutName);
+                    await _useCase.SaveUserWorkout(input.UserId, input.GroupId, dto);
                     return true;
                 }
                 catch
