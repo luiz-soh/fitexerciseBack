@@ -7,6 +7,7 @@ namespace Application.UserWorkout.UseCase
     {
         Task AddUserWorkout(AddUserWorkoutDto input);
         Task SaveUserWorkout(int userId, int groupId, SaveUserWorkoutDto input);
+        Task UpdateUserWorkouts(int userId, int groupId, List<SaveUserWorkoutDto> input);
         Task<List<UserExercisesDto>> GetUserExercises(int userId, int groupId);
         Task DeleteUserWorkoutId(int userId, int workoutId);
         Task ChangeUserWorkoutPosition(List<UserWorkoutPositionInput> input);

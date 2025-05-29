@@ -11,7 +11,7 @@ namespace Application.UserWorkout.v2.Commands.Validation
             .NotNull().WithMessage("Id do grupo de treino é obrigatório")
             .GreaterThan(0).WithMessage("Id do grupo de treino é obrigatório");
 
-            RuleFor(x => x.WorkoutName)
+            RuleFor(x => x.Workout.WorkoutName)
             .NotNull().WithMessage("Nome do treino é obrigatório")
             .NotEmpty().WithMessage("Nome do treino é obrigatório");
         }

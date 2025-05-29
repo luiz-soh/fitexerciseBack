@@ -142,6 +142,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<UpdateUserWorkoutCommand, bool>, UpdateUserWorkoutHandler>();
             //V2
             services.AddTransient<IRequestHandler<AddUserWorkoutCommand, bool>, AddUserWorkoutHandler>();
+            services.AddTransient<IRequestHandler<UpdateUserWorkoutsCommand, bool>, UpdateUserWorkoutsHandler>();
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();

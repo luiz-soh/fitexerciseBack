@@ -4,9 +4,9 @@ using Domain.Base.Messages;
 
 namespace Application.UserWorkout.Commands
 {
-    public class UpdateUserWorkoutCommand(UpdateUserWorkoutInput input) : Command<bool>
+    public class UpdateUserWorkoutCommand(UpdateUserWorkoutInputOld input) : Command<bool>
     {
-        public UpdateUserWorkoutInput Input { get; set; } = input;
+        public UpdateUserWorkoutInputOld Input { get; set; } = input;
 
         public override bool IsValid()
         {

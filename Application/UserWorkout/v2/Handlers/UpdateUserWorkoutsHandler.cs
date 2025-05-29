@@ -8,25 +8,24 @@ using MediatR;
 
 namespace Application.UserWorkout.v2.Handlers
 {
-    public class AddUserWorkoutHandler : IRequestHandler<AddUserWorkoutCommand, bool>
+    public class UpdateUserWorkoutsHandler : IRequestHandler<UpdateUserWorkoutsCommand, bool>
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IUserWorkoutUseCase _useCase;
 
-        public AddUserWorkoutHandler(IUserWorkoutUseCase useCase, IMediatorHandler handler)
+        public UpdateUserWorkoutsHandler(IUserWorkoutUseCase useCase, IMediatorHandler handler)
         {
             _useCase = useCase;
             _mediatorHandler = handler;
         }
-        public async Task<bool> Handle(AddUserWorkoutCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateUserWorkoutsCommand request, CancellationToken cancellationToken)
         {
             if (request.IsValid())
             {
                 try
                 {
-                    var input = request.Input.Workout;
-                    var dto = new SaveUserWorkoutDto(input.Position, input.WorkoutSeries, input.WorkoutRepetition, input.WorkoutId, input.WorkoutName);
-                    await _useCase.SaveUserWorkout(request.Input.UserId, request.Input.GroupId, dto);
+                    var dto = request.Input.Workouts!.Select(x => new SaveUserWorkoutDto(x.Position, x.WorkoutSeries, x.WorkoutRepetition, x.WorkoutId, x.WorkoutName)).ToList();
+                    await _useCase.UpdateUserWorkouts(request.Input.UserId, request.Input.GroupId, dto);
                     return true;
                 }
                 catch

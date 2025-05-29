@@ -70,6 +70,31 @@ namespace Infra.Repository.UserWorkout
             await _dinamoDBContext.SaveAsync(entity);
         }
 
+        public async Task UpdateUserWorkouts(int groupId, List<SaveUserWorkoutDto> dtos)
+        {
+            List<SaveUserWorkoutDto> workoutPlan = [];
+            foreach (var dto in dtos)
+            {
+                if (dto.WorkoutId is not null)
+                {
+                    using var context = new ContextBase(_optionsBuilder, _secrets);
+                    var workout = await context.FitWorkout.Where(x => x.WorkoutId == dto.WorkoutId).AsNoTracking().FirstOrDefaultAsync();
+                    if (workout is not null)
+                    {
+                        dto.ImgUrl = _secrets.Value.S3Url + workout.ImgPath;
+                        dto.VideoUrl = _secrets.Value.S3Url + workout.S3Path;
+                        dto.WorkoutName = workout.WorkoutName;
+                    }
+                }
+
+                workoutPlan.Add(dto);
+            }
+
+            var plan = JsonSerializer.Serialize(workoutPlan);
+            var entity = new DynamoUserWorkout(groupId, plan);
+            await _dinamoDBContext.SaveAsync(entity);
+        }
+
         public async Task<List<UserExercisesDto>> GetUserExercises(int userId, int groupId)
         {
             using var context = new ContextBase(_optionsBuilder, _secrets);

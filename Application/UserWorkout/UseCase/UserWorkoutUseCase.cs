@@ -68,5 +68,19 @@ namespace Application.UserWorkout.UseCase
             }
 
         }
+
+        public async Task UpdateUserWorkouts(int userId, int groupId, List<SaveUserWorkoutDto> input)
+        {
+            var group = await _groupWorkoutRepository.GetGroupById(groupId);
+            if (group is not null && group.UserId == userId)
+            {
+                await _repository.UpdateUserWorkouts(groupId, input);
+            }
+            else
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
+            }
+
+        }
     }
 }

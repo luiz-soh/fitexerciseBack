@@ -124,7 +124,7 @@ namespace FitExerciseBack.Controllers
         }
 
         [HttpPut("UpdateUserWorkout")]
-        public async Task<IActionResult> UpdateUserWorkout(UpdateUserWorkoutInput input)
+        public async Task<IActionResult> UpdateUserWorkout(UpdateUserWorkoutInputOld input)
         {
             if (IsGymUser())
             {
@@ -170,6 +170,34 @@ namespace FitExerciseBack.Controllers
             var command = new AddUserWorkoutCommand(input);
 
             await _mediatorHandler.SendCommand<AddUserWorkoutCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpPut("v2/UpdateUserWorkouts")]
+        public async Task<IActionResult> UpdateUserWorkouts(UpdateUserWorkoutsInput input)
+        {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(input.UserId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                input.UserId = GetUserId();
+            }
+            var command = new UpdateUserWorkoutsCommand(input);
+
+            await _mediatorHandler.SendCommand<UpdateUserWorkoutsCommand, bool>(command);
 
             if (IsValidOperation())
             {
