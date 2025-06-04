@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.UserWorkout.Commands.Validation
 {
-    public class AddUserWorkoutValidation : AbstractValidator<AddUserWorkoutInput>
+    public class AddUserWorkoutValidationOld : AbstractValidator<AddUserWorkoutInputOld>
     {
-        public AddUserWorkoutValidation()
+        public AddUserWorkoutValidationOld()
         {
             RuleFor(x => x.UserId)
             .NotNull().WithMessage("Id do usuário é obrigatório")

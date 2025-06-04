@@ -1,33 +1,33 @@
 using Application.UserWorkout.Commands;
 using Application.UserWorkout.UseCase;
+using Application.UserWorkout.v2.Boundaries;
+using Application.UserWorkout.v2.Commands;
+using BlazMapper;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.UserWorkout;
 using MediatR;
 
-namespace Application.UserWorkout.Handlers
+namespace Application.UserWorkout.v2.Handlers
 {
-    public class AddUserWorkoutHandlerOld : IRequestHandler<AddUserWorkoutCommandOld, bool>
+    public class GetUserWorkoutsHandler : IRequestHandler<GetUserWorkoutsCommand, List<DynamoUserWorkoutOutput>>
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IUserWorkoutUseCase _useCase;
 
-        public AddUserWorkoutHandlerOld(IUserWorkoutUseCase useCase, IMediatorHandler handler)
+        public GetUserWorkoutsHandler(IUserWorkoutUseCase useCase, IMediatorHandler handler)
         {
             _useCase = useCase;
             _mediatorHandler = handler;
         }
-
-        public async Task<bool> Handle(AddUserWorkoutCommandOld request, CancellationToken cancellationToken)
+        public async Task<List<DynamoUserWorkoutOutput>> Handle(GetUserWorkoutsCommand request, CancellationToken cancellationToken)
         {
             if (request.IsValid())
             {
                 try
                 {
-                    var input = request.Input;
-                    var dto = new AddUserWorkoutDto(input.UserId, input.WorkoutId, input.GroupWorkoutId, input.WorkoutSeries, input.WorkoutRepetition);
-                    await _useCase.AddUserWorkout(dto);
-                    return true;
+                    var dto = await _useCase.GetUserWorkouts(request.UserId, request.GroupId);
+                    return [.. dto.Select(x => x.MapTo<DynamoUserWorkoutDto, DynamoUserWorkoutOutput>())];
                 }
                 catch
                 {
@@ -43,7 +43,7 @@ namespace Application.UserWorkout.Handlers
                 }
             }
 
-            return false;
+            return [];
         }
     }
 }

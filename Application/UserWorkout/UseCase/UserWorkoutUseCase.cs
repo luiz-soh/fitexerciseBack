@@ -1,5 +1,8 @@
 using Application.UserWorkout.Boundaries;
+using Domain.Base.Communication;
+using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.UserWorkout;
+using Domain.Entities.GroupWorkout;
 using Domain.Entities.UserWorkout;
 
 namespace Application.UserWorkout.UseCase
@@ -7,10 +10,15 @@ namespace Application.UserWorkout.UseCase
     public class UserWorkoutUseCase : IUserWorkoutUseCase
     {
         private readonly IUserWorkoutRepository _repository;
+        private readonly IGroupWorkoutRepository _groupWorkoutRepository;
+        private readonly IMediatorHandler _mediatorHandler;
 
-        public UserWorkoutUseCase(IUserWorkoutRepository repository)
+        public UserWorkoutUseCase(IUserWorkoutRepository repository,
+                                  IGroupWorkoutRepository groupWorkoutRepository, IMediatorHandler handler)
         {
             _repository = repository;
+            _groupWorkoutRepository = groupWorkoutRepository;
+            _mediatorHandler = handler;
         }
 
         public async Task AddUserWorkout(AddUserWorkoutDto dto)
@@ -43,8 +51,50 @@ namespace Application.UserWorkout.UseCase
         }
 
         public async Task UpdateUserWorkout(UpdateUserWorkoutDto dto)
-        {;
+        {
             await _repository.UpdateUserWorkout(dto);
+        }
+
+        public async Task SaveUserWorkout(int userId, int groupId, DynamoUserWorkoutDto input)
+        {
+            var group = await _groupWorkoutRepository.GetGroupById(groupId);
+            if (group is not null && group.UserId == userId)
+            {
+                await _repository.SaveUserWorkout(groupId, input);
+            }
+            else
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
+            }
+
+        }
+
+        public async Task UpdateUserWorkouts(int userId, int groupId, List<DynamoUserWorkoutDto> input)
+        {
+            var group = await _groupWorkoutRepository.GetGroupById(groupId);
+            if (group is not null && group.UserId == userId)
+            {
+                await _repository.UpdateUserWorkouts(groupId, input);
+            }
+            else
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
+            }
+
+        }
+
+        public async Task<List<DynamoUserWorkoutDto>> GetUserWorkouts(int userId, int groupId)
+        {
+            var group = await _groupWorkoutRepository.GetGroupById(groupId);
+            if (group is not null && group.UserId == userId)
+            {
+                return await _repository.GetUserWorkouts(groupId);
+            }
+            else
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
+                return [];
+            }
         }
     }
 }

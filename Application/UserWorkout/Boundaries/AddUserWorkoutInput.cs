@@ -1,6 +1,6 @@
 namespace Application.UserWorkout.Boundaries
 {
-    public class AddUserWorkoutInput
+    public class AddUserWorkoutInputOld
     {
         public int UserId { get; set; } = 0;
         public int WorkoutId { get; set; } = 0;

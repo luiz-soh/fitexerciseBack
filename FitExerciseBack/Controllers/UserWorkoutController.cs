@@ -1,6 +1,8 @@
 ﻿using Application.Gym.UseCase;
 using Application.UserWorkout.Boundaries;
 using Application.UserWorkout.Commands;
+using Application.UserWorkout.v2.Boundaries;
+using Application.UserWorkout.v2.Commands;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using MediatR;
@@ -18,7 +20,7 @@ namespace FitExerciseBack.Controllers
         private readonly IMediatorHandler _mediatorHandler = mediatorHandler;
 
         [HttpPost("AddUserWorkout")]
-        public async Task<IActionResult> AddUserWorkout(AddUserWorkoutInput input)
+        public async Task<IActionResult> AddUserWorkout(AddUserWorkoutInputOld input)
         {
             if (IsGymUser())
             {
@@ -31,9 +33,9 @@ namespace FitExerciseBack.Controllers
             {
                 input.UserId = GetUserId();
             }
-            var command = new AddUserWorkoutCommand(input);
+            var command = new AddUserWorkoutCommandOld(input);
 
-            await _mediatorHandler.SendCommand<AddUserWorkoutCommand, bool>(command);
+            await _mediatorHandler.SendCommand<AddUserWorkoutCommandOld, bool>(command);
 
             if (IsValidOperation())
             {
@@ -122,7 +124,7 @@ namespace FitExerciseBack.Controllers
         }
 
         [HttpPut("UpdateUserWorkout")]
-        public async Task<IActionResult> UpdateUserWorkout(UpdateUserWorkoutInput input)
+        public async Task<IActionResult> UpdateUserWorkout(UpdateUserWorkoutInputOld input)
         {
             if (IsGymUser())
             {
@@ -142,6 +144,92 @@ namespace FitExerciseBack.Controllers
             if (IsValidOperation())
             {
                 return NoContent();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        // V2 //
+
+        [HttpPost("v2/AddUserWorkout")]
+        public async Task<IActionResult> AddUserWorkoutV2(AddUserWorkoutInput input)
+        {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(input.UserId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                input.UserId = GetUserId();
+            }
+            var command = new AddUserWorkoutCommand(input);
+
+            await _mediatorHandler.SendCommand<AddUserWorkoutCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpPut("v2/UpdateUserWorkouts")]
+        public async Task<IActionResult> UpdateUserWorkouts(UpdateUserWorkoutsInput input)
+        {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(input.UserId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                input.UserId = GetUserId();
+            }
+            var command = new UpdateUserWorkoutsCommand(input);
+
+            await _mediatorHandler.SendCommand<UpdateUserWorkoutsCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpGet("v2/GetUserWorkouts/{groupId}")]
+        public async Task<IActionResult> GetUserWorkouts([FromRoute] int groupId, [FromQuery] int? userId)
+        {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId ?? 0))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
+            var command = new GetUserWorkoutsCommand(groupId, userId ?? 0);
+
+            var response = await _mediatorHandler.SendCommand<GetUserWorkoutsCommand, List<DynamoUserWorkoutOutput>>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok(response);
             }
             else
             {

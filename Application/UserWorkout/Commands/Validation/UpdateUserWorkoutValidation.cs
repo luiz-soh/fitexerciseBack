@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.UserWorkout.Commands.Validation
 {
-    public class UpdateUserWorkoutValidation : AbstractValidator<UpdateUserWorkoutInput>
+    public class UpdateUserWorkoutValidation : AbstractValidator<UpdateUserWorkoutInputOld>
     {
         public UpdateUserWorkoutValidation()
         {
