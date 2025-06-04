@@ -43,6 +43,7 @@ using Application.UserWorkout.Boundaries;
 using Application.UserWorkout.Commands;
 using Application.UserWorkout.Handlers;
 using Application.UserWorkout.UseCase;
+using Application.UserWorkout.v2.Boundaries;
 using Application.UserWorkout.v2.Commands;
 using Application.UserWorkout.v2.Handlers;
 using Domain.Base.Communication;
@@ -143,6 +144,7 @@ namespace FitExerciseBack.Setup
             //V2
             services.AddTransient<IRequestHandler<AddUserWorkoutCommand, bool>, AddUserWorkoutHandler>();
             services.AddTransient<IRequestHandler<UpdateUserWorkoutsCommand, bool>, UpdateUserWorkoutsHandler>();
+            services.AddTransient<IRequestHandler<GetUserWorkoutsCommand, List<DynamoUserWorkoutOutput>>, GetUserWorkoutsHandler>();
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();

@@ -25,7 +25,7 @@ namespace Application.UserWorkout.v2.Handlers
                 try
                 {
                     var input = request.Input.Workout;
-                    var dto = new SaveUserWorkoutDto(input.Position, input.WorkoutSeries, input.WorkoutRepetition, input.WorkoutId, input.WorkoutName);
+                    var dto = new DynamoUserWorkoutDto(input.Position, input.Series, input.Repetitions, input.WorkoutId, input.WorkoutName);
                     await _useCase.SaveUserWorkout(request.Input.UserId, request.Input.GroupId, dto);
                     return true;
                 }

@@ -1,21 +1,25 @@
+using Amazon.DynamoDBv2.DataModel;
 using Domain.Configuration;
 using Domain.DTOs.GrouptWorkout;
 using Domain.Entities.GroupWorkout;
+using Domain.Entities.UserWorkout;
 using Infra.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace Infra.Repository.GroupWorkout
 {
-        public class GroupWorkoutRepository : IGroupWorkoutRepository
+    public class GroupWorkoutRepository : IGroupWorkoutRepository
     {
         private readonly DbContextOptions<ContextBase> _optionsBuilder;
+        private readonly IDynamoDBContext _dinamoDBContext;
         private readonly IOptions<Secrets> _secrets;
 
-        public GroupWorkoutRepository(IOptions<Secrets> secrets)
+        public GroupWorkoutRepository(IOptions<Secrets> secrets, IDynamoDBContext dynamoDBContext)
         {
             _secrets = secrets;
             _optionsBuilder = new DbContextOptions<ContextBase>();
+            _dinamoDBContext = dynamoDBContext;
         }
 
         public async Task CreateGroupWorkout(int userId, string name)
@@ -75,6 +79,7 @@ namespace Infra.Repository.GroupWorkout
             {
                 context.GroupWorkout.Remove(entity);
                 await context.SaveChangesAsync();
+                await _dinamoDBContext.DeleteAsync<DynamoUserWorkout>(id);
             }
         }
     }

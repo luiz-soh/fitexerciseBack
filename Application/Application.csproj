@@ -13,6 +13,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.0" />
     <PackageReference Include="AWSSDK.S3" Version="4.0.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="BlazMapper" Version="0.0.4" />
   </ItemGroup>
 
   <ItemGroup>

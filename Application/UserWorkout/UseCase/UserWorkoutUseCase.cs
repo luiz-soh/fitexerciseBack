@@ -55,7 +55,7 @@ namespace Application.UserWorkout.UseCase
             await _repository.UpdateUserWorkout(dto);
         }
 
-        public async Task SaveUserWorkout(int userId, int groupId, SaveUserWorkoutDto input)
+        public async Task SaveUserWorkout(int userId, int groupId, DynamoUserWorkoutDto input)
         {
             var group = await _groupWorkoutRepository.GetGroupById(groupId);
             if (group is not null && group.UserId == userId)
@@ -69,7 +69,7 @@ namespace Application.UserWorkout.UseCase
 
         }
 
-        public async Task UpdateUserWorkouts(int userId, int groupId, List<SaveUserWorkoutDto> input)
+        public async Task UpdateUserWorkouts(int userId, int groupId, List<DynamoUserWorkoutDto> input)
         {
             var group = await _groupWorkoutRepository.GetGroupById(groupId);
             if (group is not null && group.UserId == userId)
@@ -81,6 +81,20 @@ namespace Application.UserWorkout.UseCase
                 await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
             }
 
+        }
+
+        public async Task<List<DynamoUserWorkoutDto>> GetUserWorkouts(int userId, int groupId)
+        {
+            var group = await _groupWorkoutRepository.GetGroupById(groupId);
+            if (group is not null && group.UserId == userId)
+            {
+                return await _repository.GetUserWorkouts(groupId);
+            }
+            else
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
+                return [];
+            }
         }
     }
 }

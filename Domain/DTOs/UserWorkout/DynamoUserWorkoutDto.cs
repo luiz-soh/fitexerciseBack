@@ -1,14 +1,14 @@
 namespace Domain.DTOs.UserWorkout
 {
-    public class SaveUserWorkoutDto
+    public class DynamoUserWorkoutDto
     {
-        public SaveUserWorkoutDto()
+        public DynamoUserWorkoutDto()
         {
             Position = 0;
             WorkoutName = string.Empty;
         }
 
-        public SaveUserWorkoutDto(int position, int? series,
+        public DynamoUserWorkoutDto(int position, int? series,
          string? repetitions, int? workoutId, string workoutName)
         {
             Position = position;

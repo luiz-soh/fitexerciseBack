@@ -4,8 +4,8 @@ namespace Application.UserWorkout.v2.Boundaries
     {
         public int? WorkoutId { get; set; }
         public string WorkoutName { get; set; } = string.Empty;
-        public int? WorkoutSeries { get; set; }
-        public string? WorkoutRepetition { get; set; }
+        public int? Series { get; set; }
+        public string? Repetitions { get; set; }
         public int Position { get; set; } = 0;
     }
 }

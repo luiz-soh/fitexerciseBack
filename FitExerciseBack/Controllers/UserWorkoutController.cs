@@ -201,7 +201,35 @@ namespace FitExerciseBack.Controllers
 
             if (IsValidOperation())
             {
-                return StatusCode(201);
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpGet("v2/GetUserWorkouts/{groupId}")]
+        public async Task<IActionResult> GetUserWorkouts([FromRoute] int groupId, [FromQuery] int? userId)
+        {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId ?? 0))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
+            var command = new GetUserWorkoutsCommand(groupId, userId ?? 0);
+
+            var response = await _mediatorHandler.SendCommand<GetUserWorkoutsCommand, List<DynamoUserWorkoutOutput>>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok(response);
             }
             else
             {
