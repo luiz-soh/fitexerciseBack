@@ -1,4 +1,3 @@
-using Application.GroupWorkout.Boundaries;
 using FluentValidation;
 
 namespace Application.GroupWorkout.Commands.CreateGroup

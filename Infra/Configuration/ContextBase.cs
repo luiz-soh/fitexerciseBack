@@ -30,6 +30,7 @@ namespace Infra.Configuration
         public DbSet<HiitCategoryEntity> HiitCategory => Set<HiitCategoryEntity>();
         public DbSet<HiitEntity> Hiit => Set<HiitEntity>();
         public DbSet<HiitSerieEntity> HiitSerie => Set<HiitSerieEntity>();
+        public DbSet<CheckInWorkoutEntity> CheckinWorkout => Set<CheckInWorkoutEntity>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

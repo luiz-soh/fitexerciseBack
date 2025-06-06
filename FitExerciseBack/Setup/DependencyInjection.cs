@@ -9,6 +9,7 @@ using Application.FitWorkout.Handlers;
 using Application.FitWorkout.UseCase;
 using Application.GroupWorkout.Boundaries;
 using Application.GroupWorkout.Commands;
+using Application.GroupWorkout.Commands.AddCheckinWorkout;
 using Application.GroupWorkout.Commands.CreateGroup;
 using Application.GroupWorkout.Commands.DeleteGroupById;
 using Application.GroupWorkout.Commands.GetGroupById;
@@ -128,6 +129,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<UpdateGroupCommand, bool>, UpdateGroupHandler>();
             services.AddTransient<IRequestHandler<GetGroupByIdCommand, GroupWorkoutOutput>, GetGroupByIdHandler>();
             services.AddTransient<IRequestHandler<DeleteGroupByIdCommand, bool>, DeleteGroupByIdHandler>();
+            services.AddTransient<IRequestHandler<AddCheckInWorkoutCommand, bool>, AddCheckInWorkoutHandler>();
 
             //hiit
             services.AddScoped<IHiitUseCase, HiitUseCase>();

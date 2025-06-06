@@ -1,4 +1,5 @@
-using Domain.DTOs.GrouptWorkout;
+using Domain.DTOs.GroupWorkout;
+using Domain.DTOS.GroupWorkout;
 
 namespace Application.GroupWorkout.UseCase
 {
@@ -9,5 +10,6 @@ namespace Application.GroupWorkout.UseCase
         Task<GroupWorkoutDto> GetGroupById(int id);
         Task<bool> UpdateGroupWorkout(int id, string name);
         Task<bool> DeleteGroupWorkout(int id, int userId);
+        Task AddCheckinWorkout(CheckInWorkoutDto dto);
     }
 }
