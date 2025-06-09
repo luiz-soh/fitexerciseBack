@@ -1,7 +1,5 @@
 using Domain.Base.Communication;
-using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.GroupWorkout;
-using Domain.DTOS.GroupWorkout;
 using Domain.Entities.GroupWorkout;
 
 namespace Application.GroupWorkout.UseCase
@@ -14,19 +12,6 @@ namespace Application.GroupWorkout.UseCase
         {
             _groupWorkoutRepository = groupWorkoutRepository;
             _mediatorHandler = handler;
-        }
-
-        public async Task AddCheckinWorkout(CheckInWorkoutDto dto)
-        {
-            var group = await _groupWorkoutRepository.GetGroupById(dto.GroupId);
-            if (group is not null && group.UserId == dto.UserId)
-            {
-                await _groupWorkoutRepository.AddCheckInWorkout(dto);
-            }
-            else
-            {
-                await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
-            }
         }
 
         public async Task<bool> AddGroupWorkout(int userId, string name)

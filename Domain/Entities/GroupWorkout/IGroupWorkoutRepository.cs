@@ -1,5 +1,4 @@
 using Domain.DTOs.GroupWorkout;
-using Domain.DTOS.GroupWorkout;
 
 namespace Domain.Entities.GroupWorkout
 {
@@ -10,6 +9,5 @@ namespace Domain.Entities.GroupWorkout
         Task<GroupWorkoutDto> GetGroupById(int id);
         Task UpdateGroupWorkout(int id, string name);
         Task DeleteGroupWorkout(int id, int userId);
-        Task AddCheckInWorkout(CheckInWorkoutDto dto);
     }
 }

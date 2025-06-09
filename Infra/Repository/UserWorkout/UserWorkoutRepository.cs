@@ -2,6 +2,7 @@ using System.Text.Json;
 using Amazon.DynamoDBv2.DataModel;
 using Domain.Configuration;
 using Domain.DTOs.UserWorkout;
+using Domain.Entities.GroupWorkout;
 using Domain.Entities.UserWorkout;
 using Infra.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -158,6 +159,15 @@ namespace Infra.Repository.UserWorkout
             var userWorkout = new UserWorkoutEntity(input);
 
             context.UserWorkout.Update(userWorkout);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task AddCheckInWorkout(CheckInWorkoutDto dto)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+            var entity = new CheckInWorkoutEntity(dto);
+            entity.CheckInDate = DateTime.SpecifyKind(entity.CheckInDate, DateTimeKind.Utc);
+            context.CheckinWorkout.Add(entity);
             await context.SaveChangesAsync();
         }
     }

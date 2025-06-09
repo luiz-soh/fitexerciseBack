@@ -1,10 +1,10 @@
-using Application.GroupWorkout.Boundaries;
-using Application.GroupWorkout.Commands.AddCheckinWorkout;
-using Application.GroupWorkout.UseCase;
+using Application.UserWorkout.UseCase;
+using Application.UserWorkout.v2.Boundaries;
+using Application.UserWorkout.v2.Commands;
 using BlazMapper;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
-using Domain.DTOS.GroupWorkout;
+using Domain.DTOs.UserWorkout;
 using MediatR;
 
 namespace Application.GroupWorkout.Handlers
@@ -12,9 +12,9 @@ namespace Application.GroupWorkout.Handlers
     public class AddCheckInWorkoutHandler : IRequestHandler<AddCheckInWorkoutCommand, bool>
     {
         private readonly IMediatorHandler _mediatorHandler;
-        private readonly IGroupWorkoutUseCase _useCase;
+        private readonly IUserWorkoutUseCase _useCase;
 
-        public AddCheckInWorkoutHandler(IGroupWorkoutUseCase useCase, IMediatorHandler handler)
+        public AddCheckInWorkoutHandler(IUserWorkoutUseCase useCase, IMediatorHandler handler)
         {
             _useCase = useCase;
             _mediatorHandler = handler;

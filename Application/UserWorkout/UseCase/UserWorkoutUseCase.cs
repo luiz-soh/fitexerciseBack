@@ -96,5 +96,18 @@ namespace Application.UserWorkout.UseCase
                 return [];
             }
         }
+
+        public async Task AddCheckinWorkout(CheckInWorkoutDto dto)
+        {
+            var group = await _groupWorkoutRepository.GetGroupById(dto.GroupId);
+            if (group is not null && group.UserId == dto.UserId)
+            {
+                await _repository.AddCheckInWorkout(dto);
+            }
+            else
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
+            }
+        }
     }
 }

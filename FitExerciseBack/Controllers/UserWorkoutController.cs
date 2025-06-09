@@ -8,6 +8,7 @@ using Domain.Base.Messages.CommonMessages.Notification;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FitExerciseBack.Controllers
 {
@@ -230,6 +231,27 @@ namespace FitExerciseBack.Controllers
             if (IsValidOperation())
             {
                 return Ok(response);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpPost("v2/AddCheckin")]
+        [SwaggerResponse(201, Description = "Adiciona um checkin")]
+        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
+        public async Task<IActionResult> AddCheckin(AddCheckInWorkoutInput input)
+        {
+            var userId = GetUserId();
+
+            var command = new AddCheckInWorkoutCommand(input, userId);
+
+            await _mediatorHandler.SendCommand<AddCheckInWorkoutCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return StatusCode(201);
             }
             else
             {

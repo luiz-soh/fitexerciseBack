@@ -1,7 +1,6 @@
 using Amazon.DynamoDBv2.DataModel;
 using Domain.Configuration;
 using Domain.DTOs.GroupWorkout;
-using Domain.DTOS.GroupWorkout;
 using Domain.Entities.GroupWorkout;
 using Domain.Entities.UserWorkout;
 using Infra.Configuration;
@@ -82,15 +81,6 @@ namespace Infra.Repository.GroupWorkout
                 await context.SaveChangesAsync();
                 await _dinamoDBContext.DeleteAsync<DynamoUserWorkout>(id);
             }
-        }
-
-        public async Task AddCheckInWorkout(CheckInWorkoutDto dto)
-        {
-            using var context = new ContextBase(_optionsBuilder, _secrets);
-            var entity = new CheckInWorkoutEntity(dto);
-            entity.CheckInDate = DateTime.SpecifyKind(entity.CheckInDate, DateTimeKind.Utc);
-            context.CheckinWorkout.Add(entity);
-            await context.SaveChangesAsync();
         }
     }
 }

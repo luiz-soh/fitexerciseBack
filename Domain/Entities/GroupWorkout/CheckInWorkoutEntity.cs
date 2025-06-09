@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.DTOS.GroupWorkout;
+using Domain.DTOs.UserWorkout;
 
 namespace Domain.Entities.GroupWorkout
 {

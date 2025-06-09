@@ -1,7 +1,7 @@
-using Application.GroupWorkout.Boundaries;
+using Application.UserWorkout.v2.Boundaries;
 using FluentValidation;
 
-namespace Application.GroupWorkout.Commands.AddCheckinWorkout.Validation
+namespace Application.UserWorkout.v2.Commands.Validation
 {
     public class AddCheckInWorkoutValidation : AbstractValidator<AddCheckInWorkoutInput>
     {

@@ -1,4 +1,4 @@
-namespace Application.GroupWorkout.Boundaries
+namespace Application.UserWorkout.v2.Boundaries
 {
     public class AddCheckInWorkoutInput
     {

@@ -1,4 +1,4 @@
-namespace Domain.DTOS.GroupWorkout
+namespace Domain.DTOs.UserWorkout
 {
     public class CheckInWorkoutDto
     {

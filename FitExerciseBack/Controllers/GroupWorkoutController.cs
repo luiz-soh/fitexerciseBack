@@ -1,6 +1,5 @@
 using Application.GroupWorkout.Boundaries;
 using Application.GroupWorkout.Commands;
-using Application.GroupWorkout.Commands.AddCheckinWorkout;
 using Application.GroupWorkout.Commands.CreateGroup;
 using Application.GroupWorkout.Commands.DeleteGroupById;
 using Application.GroupWorkout.Commands.GetGroupById;
@@ -161,27 +160,6 @@ namespace FitExerciseBack.Controllers
             if (IsValidOperation())
             {
                 return Ok();
-            }
-            else
-            {
-                return BadRequest(GetMessages());
-            }
-        }
-
-        [HttpPost("AddCheckin")]
-        [SwaggerResponse(201, Description = "Cria um grupo")]
-        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
-        public async Task<IActionResult> AddCheckin(AddCheckInWorkoutInput input)
-        {
-            var userId = GetUserId();
-
-            var command = new AddCheckInWorkoutCommand(input, userId);
-
-            await _mediatorHandler.SendCommand<AddCheckInWorkoutCommand, bool>(command);
-
-            if (IsValidOperation())
-            {
-                return StatusCode(201);
             }
             else
             {
