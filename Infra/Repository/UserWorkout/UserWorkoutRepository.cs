@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Domain.Configuration;
 using Domain.DTOs.UserWorkout;
@@ -7,6 +8,7 @@ using Domain.Entities.UserWorkout;
 using Infra.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
 
 namespace Infra.Repository.UserWorkout
 {
@@ -169,6 +171,12 @@ namespace Infra.Repository.UserWorkout
             entity.CheckInDate = DateTime.SpecifyKind(entity.CheckInDate, DateTimeKind.Utc);
             context.CheckinWorkout.Add(entity);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<CheckInWorkoutDto>> ListCheckInsWorkout(int userId)
+        {
+            using var context = new ContextBase(_optionsBuilder, _secrets);
+            return await context.CheckinWorkout.Where(x => x.UserId == userId).Select(x => new CheckInWorkoutDto(x)).AsNoTracking().ToListAsync();
         }
     }
 }

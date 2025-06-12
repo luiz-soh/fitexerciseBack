@@ -1,7 +1,22 @@
+using Domain.Entities.GroupWorkout;
+
 namespace Domain.DTOs.UserWorkout
 {
     public class CheckInWorkoutDto
     {
+
+        public CheckInWorkoutDto()
+        {
+        }
+
+        public CheckInWorkoutDto(CheckInWorkoutEntity entity)
+        {
+            CheckInDate = entity.CheckInDate;
+            Duration = entity.Duration;
+            GroupId = entity.GroupId;
+            UserId = entity.UserId;
+        }
+
         public DateTime CheckInDate { get; set; }
         public string Duration { get; set; } = string.Empty;
         public int GroupId { get; set; }

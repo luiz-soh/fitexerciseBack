@@ -13,5 +13,6 @@ namespace Domain.Entities.UserWorkout
         Task ChangeUserWorkoutPosition(List<ChangeUserWorkoutPositionDto> input);
         Task UpdateUserWorkout(UpdateUserWorkoutDto input);
         Task AddCheckInWorkout(CheckInWorkoutDto dto);
+        Task<List<CheckInWorkoutDto>> ListCheckInsWorkout(int userId);
     }
 }

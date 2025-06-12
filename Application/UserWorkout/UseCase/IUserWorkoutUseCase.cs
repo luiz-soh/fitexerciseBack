@@ -1,4 +1,5 @@
 using Application.UserWorkout.Boundaries;
+using Application.UserWorkout.v2.Boundaries;
 using Domain.DTOs.UserWorkout;
 
 namespace Application.UserWorkout.UseCase
@@ -14,5 +15,6 @@ namespace Application.UserWorkout.UseCase
         Task ChangeUserWorkoutPosition(List<UserWorkoutPositionInput> input);
         Task UpdateUserWorkout(UpdateUserWorkoutDto dto);
         Task AddCheckinWorkout(CheckInWorkoutDto dto);
+        Task<List<CheckInWorkoutDto>> ListCheckinsWorkout(int userId);
     }
 }

@@ -258,5 +258,34 @@ namespace FitExerciseBack.Controllers
                 return BadRequest(GetMessages());
             }
         }
+
+        [HttpGet("v2/GetUserCheckins")]
+        public async Task<IActionResult> GetUserCheckins([FromQuery] int userId = 0)
+        {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
+
+            var command = new ListCheckInsCommand(userId);
+
+            var response = await _mediatorHandler.SendCommand<ListCheckInsCommand, List<CheckInWorkoutOutput>>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
     }
 }

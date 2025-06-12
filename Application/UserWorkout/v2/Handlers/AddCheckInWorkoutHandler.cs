@@ -7,7 +7,7 @@ using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.UserWorkout;
 using MediatR;
 
-namespace Application.GroupWorkout.Handlers
+namespace Application.UserWorkout.v2.Handlers
 {
     public class AddCheckInWorkoutHandler : IRequestHandler<AddCheckInWorkoutCommand, bool>
     {

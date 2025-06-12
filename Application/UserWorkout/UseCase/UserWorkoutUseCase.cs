@@ -1,4 +1,5 @@
 using Application.UserWorkout.Boundaries;
+using Application.UserWorkout.v2.Boundaries;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
 using Domain.DTOs.UserWorkout;
@@ -108,6 +109,11 @@ namespace Application.UserWorkout.UseCase
             {
                 await _mediatorHandler.PublishNotification(new DomainNotification("error:", "Grupo não econtrado"));
             }
+        }
+
+        public async Task<List<CheckInWorkoutDto>> ListCheckinsWorkout(int userId)
+        {
+            return await _repository.ListCheckInsWorkout(userId);
         }
     }
 }

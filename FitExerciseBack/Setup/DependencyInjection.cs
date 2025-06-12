@@ -128,7 +128,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<UpdateGroupCommand, bool>, UpdateGroupHandler>();
             services.AddTransient<IRequestHandler<GetGroupByIdCommand, GroupWorkoutOutput>, GetGroupByIdHandler>();
             services.AddTransient<IRequestHandler<DeleteGroupByIdCommand, bool>, DeleteGroupByIdHandler>();
-            
+
 
             //hiit
             services.AddScoped<IHiitUseCase, HiitUseCase>();
@@ -147,6 +147,7 @@ namespace FitExerciseBack.Setup
             services.AddTransient<IRequestHandler<UpdateUserWorkoutsCommand, bool>, UpdateUserWorkoutsHandler>();
             services.AddTransient<IRequestHandler<GetUserWorkoutsCommand, List<DynamoUserWorkoutOutput>>, GetUserWorkoutsHandler>();
             services.AddTransient<IRequestHandler<AddCheckInWorkoutCommand, bool>, AddCheckInWorkoutHandler>();
+            services.AddTransient<IRequestHandler<ListCheckInsCommand, List<CheckInWorkoutOutput>>, ListCheckInsHandler>();
 
             //S3
             services.AddScoped<IS3UseCase, S3UseCase>();
