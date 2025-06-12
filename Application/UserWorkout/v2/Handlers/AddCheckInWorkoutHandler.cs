@@ -24,10 +24,7 @@ namespace Application.UserWorkout.v2.Handlers
         {
             if (request.IsValid())
             {
-                var dto = request.Input.MapTo<AddCheckInWorkoutInput, CheckInWorkoutDto>();
-                dto.UserId = request.UserId;
-                dto.CheckInDate = DateTime.Now;
-
+                var dto = new CheckInWorkoutDto(request.Input.GroupId, request.Input.Duration, request.UserId);
                 await _useCase.AddCheckinWorkout(dto);
                 return true;
             }

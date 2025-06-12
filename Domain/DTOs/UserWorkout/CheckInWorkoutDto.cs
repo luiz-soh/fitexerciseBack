@@ -5,8 +5,12 @@ namespace Domain.DTOs.UserWorkout
     public class CheckInWorkoutDto
     {
 
-        public CheckInWorkoutDto()
+        public CheckInWorkoutDto(int groupId, string duration, int userId)
         {
+            GroupId = groupId;
+            Duration = duration;
+            UserId = userId;
+            CheckInDate = DateTime.Now;
         }
 
         public CheckInWorkoutDto(CheckInWorkoutEntity entity)
