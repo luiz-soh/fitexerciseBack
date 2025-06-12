@@ -35,7 +35,6 @@ namespace FitExerciseBack.Controllers
                 input.UserId = GetUserId();
             }
             var command = new AddUserWorkoutCommandOld(input);
-
             await _mediatorHandler.SendCommand<AddUserWorkoutCommandOld, bool>(command);
 
             if (IsValidOperation())
@@ -151,9 +150,7 @@ namespace FitExerciseBack.Controllers
                 return BadRequest(GetMessages());
             }
         }
-
         // V2 //
-
         [HttpPost("v2/AddUserWorkout")]
         public async Task<IActionResult> AddUserWorkoutV2(AddUserWorkoutInput input)
         {
