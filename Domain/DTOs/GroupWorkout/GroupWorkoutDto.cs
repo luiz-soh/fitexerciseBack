@@ -1,6 +1,6 @@
 using Domain.Entities.GroupWorkout;
 
-namespace Domain.DTOs.GrouptWorkout
+namespace Domain.DTOs.GroupWorkout
 {
     public class GroupWorkoutDto
     {

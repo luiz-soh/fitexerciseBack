@@ -8,6 +8,7 @@ using Domain.Base.Messages.CommonMessages.Notification;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FitExerciseBack.Controllers
 {
@@ -34,7 +35,6 @@ namespace FitExerciseBack.Controllers
                 input.UserId = GetUserId();
             }
             var command = new AddUserWorkoutCommandOld(input);
-
             await _mediatorHandler.SendCommand<AddUserWorkoutCommandOld, bool>(command);
 
             if (IsValidOperation())
@@ -150,9 +150,7 @@ namespace FitExerciseBack.Controllers
                 return BadRequest(GetMessages());
             }
         }
-
         // V2 //
-
         [HttpPost("v2/AddUserWorkout")]
         public async Task<IActionResult> AddUserWorkoutV2(AddUserWorkoutInput input)
         {
@@ -226,6 +224,56 @@ namespace FitExerciseBack.Controllers
             var command = new GetUserWorkoutsCommand(groupId, userId ?? 0);
 
             var response = await _mediatorHandler.SendCommand<GetUserWorkoutsCommand, List<DynamoUserWorkoutOutput>>(command);
+
+            if (IsValidOperation())
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpPost("v2/AddCheckin")]
+        [SwaggerResponse(201, Description = "Adiciona um checkin")]
+        [SwaggerResponse(400, Description = "Erro", Type = typeof(List<string>))]
+        public async Task<IActionResult> AddCheckin(AddCheckInWorkoutInput input)
+        {
+            var userId = GetUserId();
+
+            var command = new AddCheckInWorkoutCommand(input, userId);
+
+            await _mediatorHandler.SendCommand<AddCheckInWorkoutCommand, bool>(command);
+
+            if (IsValidOperation())
+            {
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest(GetMessages());
+            }
+        }
+
+        [HttpGet("v2/GetUserCheckins")]
+        public async Task<IActionResult> GetUserCheckins([FromQuery] int userId = 0)
+        {
+            if (IsGymUser())
+            {
+                if (!await CanOperate(userId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                userId = GetUserId();
+            }
+
+            var command = new ListCheckInsCommand(userId);
+
+            var response = await _mediatorHandler.SendCommand<ListCheckInsCommand, List<CheckInWorkoutOutput>>(command);
 
             if (IsValidOperation())
             {

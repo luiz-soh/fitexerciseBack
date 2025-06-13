@@ -3,7 +3,6 @@ using Application.GroupWorkout.Commands;
 using Application.GroupWorkout.UseCase;
 using Domain.Base.Communication;
 using Domain.Base.Messages.CommonMessages.Notification;
-using Domain.DTOs.GrouptWorkout;
 using MediatR;
 
 namespace Application.GroupWorkout.Handlers

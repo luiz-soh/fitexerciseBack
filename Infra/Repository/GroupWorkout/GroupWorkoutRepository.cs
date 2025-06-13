@@ -1,6 +1,6 @@
 using Amazon.DynamoDBv2.DataModel;
 using Domain.Configuration;
-using Domain.DTOs.GrouptWorkout;
+using Domain.DTOs.GroupWorkout;
 using Domain.Entities.GroupWorkout;
 using Domain.Entities.UserWorkout;
 using Infra.Configuration;

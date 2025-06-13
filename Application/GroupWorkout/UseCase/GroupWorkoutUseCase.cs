@@ -1,4 +1,5 @@
-using Domain.DTOs.GrouptWorkout;
+using Domain.Base.Communication;
+using Domain.DTOs.GroupWorkout;
 using Domain.Entities.GroupWorkout;
 
 namespace Application.GroupWorkout.UseCase
@@ -6,9 +7,11 @@ namespace Application.GroupWorkout.UseCase
     public class GroupWorkoutUseCase : IGroupWorkoutUseCase
     {
         private readonly IGroupWorkoutRepository _groupWorkoutRepository;
-        public GroupWorkoutUseCase(IGroupWorkoutRepository groupWorkoutRepository)
+        private readonly IMediatorHandler _mediatorHandler;
+        public GroupWorkoutUseCase(IGroupWorkoutRepository groupWorkoutRepository, IMediatorHandler handler)
         {
             _groupWorkoutRepository = groupWorkoutRepository;
+            _mediatorHandler = handler;
         }
 
         public async Task<bool> AddGroupWorkout(int userId, string name)

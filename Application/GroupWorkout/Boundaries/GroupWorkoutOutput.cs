@@ -1,4 +1,4 @@
-using Domain.DTOs.GrouptWorkout;
+using Domain.DTOs.GroupWorkout;
 
 namespace Application.GroupWorkout.Boundaries
 {
